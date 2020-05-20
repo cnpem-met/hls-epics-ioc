@@ -1,0 +1,8 @@
+epicsEnvSet("IOC","iocHLS")
+epicsEnvSet("TOP","/home/ABTLUS/rodrigo.neto/apps/HLS-ioc")
+epicsEnvSet("SNCSEQ","/usr/local/epics/synApps/support/seq-2-2-5")
+epicsEnvSet("ASYN","/usr/local/epics/synApps/support/asyn-R4-33")
+epicsEnvSet("STREAM","/usr/local/epics/synApps/support/stream-R2-7-7c")
+epicsEnvSet("SSCAN","/usr/local/epics/synApps/support/sscan-R2-11-1")
+epicsEnvSet("CALC","/usr/local/epics/synApps/support/calc-R3-7-1")
+epicsEnvSet("EPICS_BASE","/usr/local/epics/base")

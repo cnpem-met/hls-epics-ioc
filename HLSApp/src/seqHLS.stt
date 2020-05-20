@@ -1,0 +1,906 @@
+program seqHLS ("P=hls")
+
+/* inicia antes de conectar as variaveis */
+//option -c;
+/* codigo reentrante, mais de uma instancia por IOC */
+option +r;
+
+
+
+/*------------------------------------------------------------------------------------------------
+  ------------------------------------------------------------------------------------------------
+  ------------------------------- Defining complementary functions -------------------------------
+  ------------------------------------------------------------------------------------------------
+  ------------------------------------------------------------------------------------------------ */
+
+%%#include <stdio.h>
+%%#include <stdlib.h>
+%%#include <string.h>
+%%#include <math.h>
+%%#include "HLS_settings.h" /*file containing parameters of the sensors and the system's layout */
+
+%{
+
+/* estruturas para conter diferentes definições, sendo elas:
+    - poly: um termo de um polinomio
+    - calib_curve: a curva de calibração de um sensor, que consiste em um polinomio de 3o grau
+    - sensor: define um sensor como tendo uma identificação (ID) e uma curva de calibração */
+
+struct poly_term {
+	 float coeff;
+	 int expo;
+};
+struct polynomial {
+    struct poly_term poly[4];
+};
+struct sensor {
+    char ID[12];
+    struct polynomial calib_curve;
+};
+
+float  *convert_data (char resp[], struct sensor *sensor_list, float *calib_temp, char *disp_sensors[][12], int rack);
+void create_calibCurves(float calib_list[][4], struct sensor *sensor_list);
+int calc_checksum (const char *data);
+int bin_to_int (char *s);
+void int_to_bin(int digit, char *output, int min_length);
+void dec_to_hex (long decimal, char *hex);
+char *leastSign8BitArray (char *in);
+char *trim_array (char *in, int ini, int fim);
+char *get_data (char *resp);
+int verifies_checksum (char *resp);
+
+}%
+
+
+/*------------------------------------------------------------------------------------------------
+  ------------------------------------------------------------------------------------------------
+  --------------------------- Declaring variables associated with PVs ----------------------------
+  ------------------------------------------------------------------------------------------------
+  ------------------------------------------------------------------------------------------------ */
+
+string reset_racks[4];
+assign reset_racks to {"reset_rack1", "reset_rack2", "reset_rack3", "reset_rack4" };
+monitor reset_racks;
+
+string connect_racks[4];
+assign connect_racks to {"connect_rack1", "connect_rack2", "connect_rack3", "connect_rack4" };
+monitor connect_racks;
+
+char acquire_racks1[250], acquire_racks2[250], acquire_racks3[250], acquire_racks4[250];
+assign acquire_racks1 to "acquire_rack1";
+assign acquire_racks2 to "acquire_rack2";
+assign acquire_racks3 to "acquire_rack3";
+assign acquire_racks4 to "acquire_rack4";
+monitor acquire_racks1;
+monitor acquire_racks2;
+monitor acquire_racks3;
+monitor acquire_racks4;
+
+short command;
+assign command to "cmd";
+monitor command;
+
+short acq_time;
+assign acq_time to "acq_time";
+monitor acq_time;
+
+short enabled_rack[4];
+assign enabled_rack to {"enable_rack1", "enable_rack2", "enable_rack3", "enable_rack4"};
+monitor enabled_rack;
+
+float HLS_level_data[32];
+assign HLS_level_data to {"HLS:R1_S1_L", "HLS:R1_S2_L", "HLS:R1_S3_L", "HLS:R1_S4_L", "HLS:R1_S5_L", "HLS:R1_S6_L", "HLS:R1_S7_L", "HLS:R1_S8_L",
+                          "HLS:R2_S1_L", "HLS:R2_S2_L", "HLS:R2_S3_L", "HLS:R2_S4_L", "HLS:R2_S5_L", "HLS:R2_S6_L", "HLS:R2_S7_L", "HLS:R2_S8_L",
+                          "HLS:R3_S1_L", "HLS:R3_S2_L", "HLS:R3_S3_L", "HLS:R3_S4_L", "HLS:R3_S5_L", "HLS:R3_S6_L", "HLS:R3_S7_L", "HLS:R3_S8_L", 
+                          "HLS:R4_S1_L", "HLS:R4_S2_L", "HLS:R4_S3_L", "HLS:R4_S4_L", "HLS:R4_S5_L", "HLS:R4_S6_L", "HLS:R4_S7_L", "HLS:R4_S8_L" };
+
+float HLS_temp_data[32];
+assign HLS_temp_data to {"HLS:R1_S1_T", "HLS:R1_S2_T", "HLS:R1_S3_T", "HLS:R1_S4_T", "HLS:R1_S5_T", "HLS:R1_S6_T", "HLS:R1_S7_T", "HLS:R1_S8_T",
+                         "HLS:R2_S1_T", "HLS:R2_S2_T", "HLS:R2_S3_T", "HLS:R2_S4_T", "HLS:R2_S5_T", "HLS:R2_S6_T", "HLS:R2_S7_T", "HLS:R2_S8_T",
+                         "HLS:R3_S1_T", "HLS:R3_S2_T", "HLS:R3_S3_T", "HLS:R3_S4_T", "HLS:R3_S5_T", "HLS:R3_S6_T", "HLS:R3_S7_T", "HLS:R3_S8_T", 
+                         "HLS:R4_S1_T", "HLS:R4_S2_T", "HLS:R4_S3_T", "HLS:R4_S4_T", "HLS:R4_S5_T", "HLS:R4_S6_T", "HLS:R4_S7_T", "HLS:R4_S8_T" };
+
+
+/*------------------------------------------------------------------------------------------------
+  ------------------------------------------------------------------------------------------------
+  ------------------------- Declaring exclusively sequencer variables  ---------------------------
+  ------------------------------------------------------------------------------------------------
+  ------------------------------------------------------------------------------------------------ */
+
+/* ------------------------ Event flags ----------------------- */
+evflag ef_call_init;
+evflag ef_call_acquire;
+evflag ef_callback_acquire;
+
+/* -------------------------- Static -------------------------- */
+char msg_error_conn[50] = "[Error] Rack is off - ";
+char msg_error_check[50] = "[Error] Connection checksum - ";
+char msg_sucess[50] = "Sucessfuly connected - ";
+char *msg_error_list[10] = {"Rack1\n", "Rack2\n", "Rack3\n", "Rack4\n"};
+
+/* ------------------------- Dynamic ------------------------- */
+struct sensor sensors[30];
+char *resp;
+char data[250];
+float *data_conv;
+char msg[60] = "";
+int checksum, j, k;
+short i, rack;
+short rack_state[4] = {0, 0, 0, 0};
+short call_init, call_acq;
+
+
+
+
+/*------------------------------------------------------------------------------------------------
+  ------------------------------------------------------------------------------------------------
+  ------------------------ Beginning of the state logic implementation  --------------------------
+  ------------------------------------------------------------------------------------------------
+  ------------------------------------------------------------------------------------------------ */
+
+
+/* ---------------------------------------- State Set 1: main ----------------------------------------
+- Desc: responsible for handle external calls to the functions
+- States:
+	- init: initization of variables and eventFlags
+	- idle: state to the program to be while waiting for next external commands
+------------------------------------------------------------------------------------------------------*/
+ss main {
+    state init {
+        when (pvConnectCount() == pvChannelCount() ) {
+            printf("Starting...\n");
+
+            /* filling up the sensors structure with sensors IDs and its respective 
+               calibration curves in the form of 3rd degree polynomial */
+            create_calibCurves(calib_list, sensors);
+            
+            /* clearing the current content of the eventFlags */
+            efClear (ef_call_init);
+            efClear (ef_call_acquire);
+            efClear (ef_callback_acquire);
+
+            command = -1;
+            pvPut (command);
+        } state idle
+    }
+
+    state idle {
+        when (){
+            pvGet(command);
+            if (command == 1){ /* external call for initialize racks */
+                efSet (ef_call_init);
+                command = -1;
+                pvPut (command);
+            }
+            if (command == 2){ /* external call for the beginning of data acquisition */ 
+                efSet (ef_call_acquire);
+                command = -1;
+                pvPut (command);
+            }
+            if (command == 3){ /* external call for the interruption of acquisiton */
+                efSet (ef_callback_acquire);
+                command = -1;
+                pvPut (command);
+            }
+        } state idle
+    }
+
+}
+
+/* -------------------------------- State Set 2: initAndConnectRack --------------------------------
+- Desc: responsible for trying to initialize and connect the pre-set racks
+- States:
+	- initAndConnectRack_idle: wait for the internal call to initialize and connect racks
+	- callInitCmd: responsible for checking user-set variables (i.e. PVs enable_rack1 etc) and 
+                    processing specific Async Stream-based records (ASR) for initialize racks
+    - init_rack: wait for the record to finish processing, and process specific ASR for connecting racks
+    - connect_rack: wait for the record to finish processing, then analyze the receveid answer of the
+                    hardware (i.e. rack) and set the current state of the devices in global variables
+------------------------------------------------------------------------------------------------------*/
+ss initAndConnectRack {
+
+    state initAndConnectRack_idle {
+        when ( efTestAndClear(ef_call_init) ) { /* transition occurs when the eventFlag is changed in SS 'main' */
+            call_init = -1;
+            i = 1;
+        } state callInitCmd
+    }
+
+    state callInitCmd {
+        option -e; /* this option defines that the entry block will run even if the previous state was the current one */
+        entry{
+            /* reading the current values of the user-set PVs that defines if a specific rack has to be considered or not */
+            pvGet(enabled_rack[0]);
+            pvGet(enabled_rack[1]);
+            pvGet(enabled_rack[2]);
+            pvGet(enabled_rack[3]);
+            rack = 0;
+            if (i == 1 && enabled_rack[0] == 1) {
+                call_init = 1;
+                i++;
+            } else if ( i == 2 && enabled_rack[1] == 1) {
+                call_init = 2;
+                i++;
+            } else if ( i == 3 && enabled_rack[2] == 1) {
+                call_init = 3;
+                i++;
+            } else if ( i == 4 && enabled_rack[3] == 1) {
+                call_init = 4;
+                i++;
+            } else if ( i >= 5 ){
+                call_init = -2;
+            } else {
+                i++;
+                call_init = 0;
+            }
+        }
+
+        when (call_init == 1) {
+            pvPut (reset_racks[0], ASYNC); /* processing the ASR that sends a 'init' command to the rack */
+            rack = 1;
+        } state init_rack
+
+         when (call_init == 2) {
+            pvPut (reset_racks[1], ASYNC);
+            rack = 2;
+        } state init_rack
+
+        when (call_init == 3) {
+            pvPut (reset_racks[2], ASYNC);
+            rack = 3;
+        } state init_rack
+
+        when (call_init == 4) {
+            pvPut (reset_racks[3], ASYNC);
+            rack = 4;
+        } state init_rack
+
+        when (call_init == 0) {
+        } state callInitCmd
+
+        when (call_init == -2) {
+        } state initAndConnectRack_idle
+
+    }
+
+    state init_rack {
+        when (pvPutComplete(reset_racks[rack - 1]) && delay (0.3)) { 
+            pvPut (connect_racks[rack - 1], ASYNC); /* processing the ASR that sends a 'connect' command to the rack */
+        } state connect_rack
+    }
+
+    state connect_rack {
+        entry {
+            call_init = -1;
+            strcpy(msg,"");
+        }
+        when (pvPutComplete(connect_racks[rack - 1]) && delay (0.1)){
+            pvGet (connect_racks[rack - 1]); /* get the answer of the equipment */
+            resp = connect_racks[rack - 1];
+
+            /* verifies the content of the answer (i.e. its data and checksum), storing the state 
+                of the rack in local variables according to the verification output */
+            if (strcmp(resp, "") == 0){
+                rack_state[rack - 1] = -1; /* state 1: rack is OFF */
+                strcat(msg, msg_error_conn); strcat(msg, msg_error_list[rack - 1]);
+                printf(msg);
+            } else {
+                if((int) resp[5] == 6){
+                    if (verifies_checksum(resp) == -1){
+                        rack_state[rack - 1] = -2; /* state 2: error in checksum */
+                        strcat(msg, msg_error_check); strcat(msg, msg_error_list[rack - 1]);
+                        printf(msg);
+                    } else {
+                        rack_state[rack - 1] = 1; /* state 3: sucessfuly connected */
+                        strcat(msg, msg_sucess); strcat(msg, msg_error_list[rack - 1]);
+                        printf(msg);
+                    }
+                }
+
+	        }
+            rack = 0;
+
+        } state callInitCmd
+    }
+
+}
+
+
+/* ------------------------------------ State Set 3: acquireData ------------------------------------
+- Desc: responsible for trying to initialize and connect the pre-set racks
+- States:
+	- acquireData_idle: wait for the internal call to acquire data from the sensors
+	- selection: verifies which rack is able for acquiring data, selects one each time and makes
+                 the specific ASR that sends the 'acquire' command to the rack to process  
+    - delay: forces a time gap between the acquisition based on the value of the user-set record 'acq_time'
+    - acquire: wait for the record to finish processing, then calls complementary functions that converts
+               the hexadecimal values in raw units to float values in engineering units, and finnaly stores
+               the converted sensor data in PVs
+------------------------------------------------------------------------------------------------------*/
+ss acquireData {
+    state acquireData_idle {
+        when ( efTestAndClear(ef_call_acquire) ) {
+            call_acq = -1;
+            i = 1;
+        } state selection
+    }
+    state selection {
+        option -e;
+        entry{
+            rack = 0;
+            if (i == 1 && rack_state[0] == 1) {
+                call_acq = 1;
+                i++;
+            } else if ( i == 2 && rack_state[1] == 1) {
+                call_acq = 2;
+                i++;
+            } else if ( i == 3 && rack_state[2] == 1) {
+                call_acq = 3;
+                i++;
+            } else if ( i == 4 && rack_state[3] == 1) {
+                call_acq = 4;
+                i++;
+            } else if ( i >= 5 ){
+                call_acq = -2;
+            } else {
+                i++;
+                call_acq = 0;
+            }
+        }
+        when (efTestAndClear(ef_callback_acquire)){ /* acquisition stops when this eventFlag is set in the SS 'main' */
+        } state acquireData_idle
+
+        when (call_acq == 1) {
+            pvPut (acquire_racks1, ASYNC);
+            rack = 1;
+        } state acquire
+
+        when (call_acq == 2) {
+            pvPut (acquire_racks2, ASYNC);
+            rack = 2;
+        } state acquire
+
+        when (call_acq == 3) {
+            pvPut (acquire_racks3, ASYNC);
+            rack = 3;
+        } state acquire
+
+        when (call_acq == 4) {
+            pvPut (acquire_racks4, ASYNC);
+            rack = 4;
+        } state acquire
+
+        when (call_acq == 0) {
+        } state selection
+
+        when (call_acq == -2) {
+        } state delay
+    }
+
+    state delay {
+        entry {
+            pvGet (acq_time);
+        }
+        when (delay (acq_time)){
+            i = 1;
+        } state selection
+    }
+
+    state acquire {
+        /* case of acquisition of sensor data from the rack 1 */
+        when (rack == 1 && pvPutComplete(acquire_racks1)){
+            /* reads the hexadecimal array received from the equipment */
+            pvGet (acquire_racks1);
+            resp = acquire_racks1;
+            
+            /* converts raw data into engineering units, i.e. level [mm] and temperature [C] */
+            data_conv = convert_data (resp, sensors, calib_temp, disp_sensors, 1);
+            
+            /* stores the converted values in its respective PVs */
+            for ( j = 1; j < (int) data_conv[0]; j++ ){
+                if (j % 2 != 0) { 
+                    /* level data is at the odd index positions of the array */ 
+                    HLS_level_data[8*(rack - 1) + (int) j/2] = data_conv [j];
+                    pvPut (HLS_level_data[8*(rack - 1) + (int) j/2]);
+                } else {
+                    /* temperature data is at the even index positions of the array */ 
+                    HLS_temp_data[8*(rack - 1) + (int) (j - 1)/2] = data_conv [j];
+                    pvPut (HLS_temp_data[8*(rack - 1) + (int) (j - 1)/2]);
+                }
+            }
+
+            free (data_conv);
+        } state selection
+        
+        /* case of acquisition of sensor data from the rack 2 */
+        when (rack == 2 && pvPutComplete(acquire_racks2)){
+            pvGet (acquire_racks2);
+            resp = acquire_racks2;
+            
+            data_conv = convert_data (resp, sensors, calib_temp, disp_sensors, 1);
+            
+            for ( j = 1; j < (int) data_conv[0]; j++ ){
+                if (j % 2 != 0) { 
+                    HLS_level_data[8*(rack - 1) + (int) j/2] = data_conv [j];
+                    pvPut (HLS_level_data[8*(rack - 1) + (int) j/2]);
+                } else {
+                    HLS_temp_data[8*(rack - 1) + (int) (j - 1)/2] = data_conv [j];
+                    pvPut (HLS_temp_data[8*(rack - 1) + (int) (j - 1)/2]);
+                }
+            }
+        } state selection
+
+        /* case of acquisition of sensor data from the rack 3 */
+        when (rack == 3 && pvPutComplete(acquire_racks3)){
+            pvGet (acquire_racks3);
+            resp = acquire_racks3;
+            
+            data_conv = convert_data (resp, sensors, calib_temp, disp_sensors, 1);
+            
+            for ( j = 1; j < (int) data_conv[0]; j++ ){
+                if (j % 2 != 0) { 
+                    HLS_level_data[8*(rack - 1) + (int) j/2] = data_conv [j];
+                    pvPut (HLS_level_data[8*(rack - 1) + (int) j/2]);
+                } else {
+                    HLS_temp_data[8*(rack - 1) + (int) (j - 1)/2] = data_conv [j];
+                    pvPut (HLS_temp_data[8*(rack - 1) + (int) (j - 1)/2]);
+                }
+            }
+        } state selection
+
+        /* case of acquisition of sensor data from the rack 4 */
+        when (rack == 4 && pvPutComplete(acquire_racks4)){
+            pvGet (acquire_racks4);
+            resp = acquire_racks4;
+            
+            data_conv = convert_data (resp, sensors, calib_temp, disp_sensors, 1);
+            
+            for ( j = 1; j < (int) data_conv[0]; j++ ){
+                if (j % 2 != 0) { 
+                    HLS_level_data[8*(rack - 1) + (int) j/2] = data_conv [j];
+                    pvPut (HLS_level_data[8*(rack - 1) + (int) j/2]);
+                } else {
+                    HLS_temp_data[8*(rack - 1) + (int) (j - 1)/2] = data_conv [j];
+                    pvPut (HLS_temp_data[8*(rack - 1) + (int) (j - 1)/2]);
+                }
+            }
+        } state selection
+
+    }
+}
+
+
+
+
+/*------------------------------------------------------------------------------------------------
+  ------------------------------------------------------------------------------------------------
+  ----------------------- Implementation of the complementary functions  -------------------------
+  ------------------------------------------------------------------------------------------------
+  ------------------------------------------------------------------------------------------------ */
+
+%{
+
+/* ------------------------------------- Function: hex_to_dec --------------------------------------
+- Desc: converts hexadecimal based values to decimal ones
+- In: char hex - hexadecimal value
+- Out: int dec - decimal value
+---------------------------------------------------------------------------------------------------- */
+int hex_to_dec (char hex){
+    int dec;
+    switch(hex){
+        case '1': dec = 1; break;
+        case '2': dec = 2; break;
+        case '3': dec = 3; break;
+        case '4': dec = 4; break;
+        case '5': dec = 5; break;
+        case '6': dec = 6; break;
+        case '7': dec = 7; break;
+        case '8': dec = 8; break;
+        case '9': dec = 9; break;
+        case 'A': dec = 10; break;
+        case 'B': dec = 11; break;
+        case 'C': dec = 12; break;
+        case 'D': dec = 13; break;
+        case 'E': dec = 14; break;
+        case 'F': dec = 15; break;
+    }
+    return dec;
+}
+
+
+/* ------------------------------------ Function: convert_data ------------------------------------
+- Desc: unravel the hexadecimal array received from the equipment, reconstructs the
+        floating-point raw values and applies the calibration curves to get the values
+        in engineering units;
+- In: 
+    - char resp[]: array received from the equipment;
+    - struct sensor *sensor_list: structured list that contains sensor's ID and calibration
+                                  parameters of the volts-level convertion of the sensors;
+    - float *calib_temp: array with calibration parameters of the volts-temperature corvertion;
+    - char *disp_sensors[][12]: array declared in 'HLS_settings.h' that holds the current 
+                                rack vs. sensors relation (important because of the calib. curves);
+    - int rack: number of the rack that generated the data present in array resp;
+- Out: 
+    - float *data_output: array with the converted values of level and temperature;
+----------------------------------------------------------------------------------------------------*/
+float  *convert_data (char resp[], struct sensor *sensor_list, float *calib_temp, char *disp_sensors[][12], int rack){
+    int resp_int[250];
+    char tmp1[9], tmp2[9], tmp3[9], tmp4[9], tmp5[9], tmp6[9], tmp7[9], tmp8[9], tmp[35];
+    char *tmp_exp, *tmp_mant;
+    char sig[2];
+    int i, j, exp, data_V;
+    float mant;
+    char data_V_char[11], *sens_ID;
+    struct sensor *s;
+    int poly_exp[4];
+    float poly_coeff[4], data_D, data_T;
+    float *data_output = malloc (17*sizeof(float));
+    char mant_char[10];
+
+    /* storing the length of the array at its first position */
+    data_output[0] = 17;
+    
+    /* converting the hexadecimal data to decimal */
+    for (i=0; i<strlen(resp); i++){
+        resp_int[i] = hex_to_dec(resp[i]);
+    }
+
+    for (i=0; i<16; i++){
+
+        strcpy(tmp, "");
+        strcpy(data_V_char, "");
+        
+        /* creating binary representation of specific parts of the array */
+        int_to_bin(resp_int[8*i+11], tmp1, 4);
+        int_to_bin(resp_int[8*i+12], tmp2, 4);
+        strcat(tmp1, tmp2);
+        int_to_bin(resp_int[8*i+9], tmp3, 4);
+        int_to_bin(resp_int[8*i+10], tmp4, 4);
+        strcat(tmp3, tmp4);
+        int_to_bin(resp_int[8*i+7], tmp5, 4);
+        int_to_bin(resp_int[8*i+8], tmp6, 4);
+        strcat(tmp5, tmp6);
+        int_to_bin(resp_int[8*i+5], tmp7, 4);
+        int_to_bin(resp_int[8*i+6], tmp8, 4);
+        strcat(tmp7, tmp8);
+
+        strcat(tmp, tmp1);
+        strcat(tmp, tmp3);
+        strcat(tmp, tmp5);
+        strcat(tmp, tmp7);
+
+        /* collecting the signal of the data */
+        if (tmp[0] == "0")
+            strcpy(sig,"");
+        else
+            strcpy(sig,"-");
+        
+        /* collecting the exponent and mantissa of the data */
+        tmp_exp = trim_array(tmp, 1, strlen(tmp) -9);
+        tmp_mant = trim_array(tmp, 9, 0);
+        exp = bin_to_int(tmp_exp) - 127;
+        mant = bin_to_int(tmp_mant)/pow(2, 23) + 1;
+
+        free (tmp_exp);
+        free (tmp_mant);
+
+        strcat(data_V_char, sig);
+        sprintf(mant_char, "%f", mant);
+        strcat(data_V_char, mant_char);
+        mant = (float) strtol(data_V_char, NULL, 10);
+        
+        /* obtaining the value of the data in Volts */
+        data_V = (float) pow(mant*2, exp);
+
+        if (i % 2 == 0){ /* even index -> level data */
+            sens_ID = disp_sensors[rack-1];
+
+            /* searchs for sensor's reference (ID) in the list */
+            s = sensor_list;
+            for (j=0; j<sizeof(sensor_list);j++){
+                if (strcmp(s->ID, sens_ID) == 0)
+                    break;
+                s++;
+            }
+
+            /* extracting polynomial parameters from the calibration curve of level of the sensor */
+            for (j=0; j<4; j++){
+                poly_exp[j] = s->calib_curve.poly[j].expo;
+                poly_coeff[j] = s->calib_curve.poly[j].coeff;
+            }
+            
+            /* finally applying the polynomial function to corvert the raw value to milimeters */
+            data_D = poly_coeff[0]*(float) pow (data_V, poly_exp[0]) +
+                     poly_coeff[1]*(float) pow (data_V, poly_exp[1]) +
+                     poly_coeff[2]*(float) pow (data_V, poly_exp[2]) +
+                     poly_coeff[3]*(float) pow (data_V, poly_exp[3]);
+
+            data_output[i+1] = data_D;
+
+        } else{ /* odd index -> temperature data */
+            data_T = calib_temp[0]*data_V + calib_temp[1];
+            data_output[i+1] = data_T;
+        }
+    }
+    return data_output;
+}
+
+
+/* ---------------------------------- Function: create_calibCurves -----------------------------------
+- Desc: stores calibration data into the structured sensor's list
+- In: 
+    - float calib_list[][4]: array declared in 'HLS_settings.h' that holds the calibration parameters of the sensors
+    - struct sensor *sensor_list: structured list that will receive sensor's ID and calibration parameters
+---------------------------------------------------------------------------------------------------- */
+void create_calibCurves(float calib_list[][4], struct sensor *sensor_list){
+    char name[] = "H7DC_0";
+    char index[3];
+    char msg[15] = "";
+
+    for (int i=0; i<30; i++){
+        /* assigning a name to the sensor */
+        sprintf(index, "%d", 32+i);
+        strcpy(msg, "");
+        strcat(msg, name);
+        strcat(msg, index);
+        strcpy(sensor_list[i].ID, msg);
+
+        /* creating and assigning a polynomial relative to the sensor's calib. parameters */
+        for (int j=0; j<4; j++){
+            sensor_list[i].calib_curve.poly[j].expo = 3 - j;
+            sensor_list[i].calib_curve.poly[j].coeff = calib_list[i][j];
+        }
+    }
+}
+
+
+/* ------------------------------------- Function: bin_to_int --------------------------------------
+- Desc: converts a binary represented value to decimal
+- In: 
+    - char *s: binary array
+- Out:
+    - int dec: decimal value
+---------------------------------------------------------------------------------------------------- */
+int bin_to_int (char *s) {
+    int dec = (int) strtol(s, NULL, 2);
+    return dec;
+}
+
+
+/* ------------------------------------- Function: dec_to_hex --------------------------------------
+- Desc: converts decimal values to hexadecimal
+- In: 
+    - long decimal: decimal value
+    - char *hex: pointer to the hexadecimal value
+---------------------------------------------------------------------------------------------------- */
+void dec_to_hex (long decimal, char *hex){
+     long quotient, remainder;
+     int j = 0;
+     char hexadecimal[100];
+
+     quotient = decimal;
+
+     while (quotient != 0) {
+         remainder = quotient % 16;          //step 1
+         if (remainder < 10)
+            hexadecimal[j++] = 48 + remainder;   //step 2
+         else
+            hexadecimal[j++] = 55 + remainder;   //step 3
+         quotient = quotient / 16;            //step 4
+     }
+     hex = hexadecimal;
+}
+
+
+/* ------------------------------------- Function: int_to_bin --------------------------------------
+- Desc: creates a binary representation of a decimal based number
+- In: 
+    - int digit: decimal based number
+    - char *output: binary array
+    - int min_length: minimum length of the binary array (e.g. 8, 16 etc)
+---------------------------------------------------------------------------------------------------- */
+void int_to_bin(int digit, char *output, int min_length) {
+    int b, aux = digit, len;
+    int k = 0, i = 0;
+    char *bits;
+    int temp;
+
+    /* counting the minimum number of elements that the binary array will request */
+    while (aux>0){
+        aux = aux/2;
+        i++;
+    }
+
+    /* dynamic allocation of the binary array; if the requested length is smaller then the 
+       min_length, array will be allocated with min_length elements */ 
+    if (i >= min_length){
+        bits= (char *) malloc((i+1)*sizeof(char));
+        len = i;
+    }else{
+        bits= (char *) malloc((min_length+1)*sizeof(char));
+        len = min_length;
+    }
+
+    strcpy(bits, "");
+
+    /* filling array with the binary terms */
+    while (digit>0) {
+        b = digit % 2;
+        digit = digit / 2;
+        char c[2];
+        sprintf(c, "%d", b);
+        strcat(bits,c);
+        k++;
+    }
+
+    /* if necessary, fills the empty spaces with 0's */
+    if (i < min_length){
+        int k = min_length - i;
+        while (k>0){
+           strcat(bits, "0");
+           k--;
+        }
+    }
+
+    /* inverting the generated array */
+    for (int low = 0, high = len - 1; low < high; low++, high--) {
+        temp = bits[low];
+		bits[low] = bits[high];
+		bits[high] = temp;
+	}
+	strcpy(output, bits);
+
+	free(bits);
+
+}
+
+
+/* --------------------------------- Function: leastSign8BitArray ----------------------------------
+- Desc: extracts the 8 least significant bits of an array
+- In: 
+    - char *in: array with binary data
+- Out:
+    - char *in(?): truncated array
+---------------------------------------------------------------------------------------------------- */
+char * leastSign8BitArray (char *in) {
+    int len = 0;
+
+    len = strlen (in);
+    if (len > 8) {
+        for (int i = 0; i < (len-8); i++){
+            in+=1;
+        }
+    }
+    return in;
+}
+
+
+/* ------------------------------------ Function: calc_checksum -------------------------------------
+- Desc: calculates the checksum of an array with hexadecimal data
+- In: 
+    - const char *data: array with hexadecimal data
+- Out:
+    - int sum: calculated checksum
+---------------------------------------------------------------------------------------------------- */
+int calc_checksum (const char *data){
+    int sum = 0;
+    char *bin8;
+    char c[2], bin[17];
+    int aux_d;
+    int i=0;
+
+    /* summing all the elements of the array, except the ETX term */
+    while (i<=strlen(data)-2){
+        c[0] = data[i];
+        c[1] = data[i+1];
+        aux_d = strtol(c, NULL, 16);
+        sum += aux_d;
+        i+=2;
+    }
+
+    int_to_bin (sum, bin, 8);
+
+    /* applying the 1-complement, then summing 1 to the decimal-based output value */
+    for (i=0;i<(int)strlen(bin);i++){
+        if (bin[i] == '0'){
+            bin[i] = '1';
+        }else{
+            bin[i] = '0';
+        }
+    }
+    sum = bin_to_int (bin);
+    sum = sum + 1;
+
+    int_to_bin (sum, bin, 8);
+
+    /* collecting the 8 least significant bits, that is the checksum */
+    bin8 = leastSign8BitArray (bin);
+    
+    /* checksum */
+    sum = bin_to_int (bin8);
+
+    return sum;
+
+}
+
+/* ------------------------------------- Function: trim_array --------------------------------------
+- Desc: generic function to trim an array in specific positions, generating a new array
+- In: 
+    - char *in: array to be trimmed
+    - int ini: number of initial elements of the array to ignore
+    - int fim: number of final elements of the array to ignore
+- Out:
+    - char *aux: trimmed array
+---------------------------------------------------------------------------------------------------- */
+char *trim_array (char *in, int ini, int fim){
+    char *aux = (char*) malloc ((strlen(in)-(ini+fim)+2)*sizeof(char));
+    char *a, *b;
+    int k = strlen(in) -1 - fim;
+
+    for (int i=0; i<ini; i++)
+        in ++;
+
+    a = in;
+    b = aux;
+
+    while (k>0){
+        *b++ = *a++;
+        k--;
+    }
+
+    return aux;
+}
+
+
+/* ------------------------------------- Function: get_data --------------------------------------
+- Desc: extract the data from the answer array, i.e. ignores the STX, ETX and checksum terms
+- In: 
+    - char *resp: array received from the equipment;
+- Out:
+    - char *aux: array containing only the the data of sensors
+---------------------------------------------------------------------------------------------------- */
+char *get_data (char *resp){
+    char *aux;
+    aux = trim_array(resp, 1, 3);
+    return aux;
+}
+
+
+/* ---------------------------------- Function: verifies_checksum -----------------------------------
+- Desc: extract the data from the answer array, i.e. ignores the STX, ETX and checksum terms
+- In: 
+    - char *resp: array received from the equipment;
+- Out:
+    - int out: boolean value that indicates that the calculated checksum and the one explicitly received
+               in the message are matching or not;
+---------------------------------------------------------------------------------------------------- */
+int verifies_checksum (char *resp){
+    char *checksum_resp;
+    int checksum_calc, out;
+    char *data = get_data(resp);
+
+    checksum_resp = trim_array(resp, strlen(resp)-3, 3);
+    checksum_calc = calc_checksum(data);
+
+    int c1, c2;
+    c1 = strtol(checksum_resp, NULL, 16);
+    c2 = checksum_calc;
+    printf("check_extracted: %d, check_calc: %d\n", c1, c2);
+    
+    free (checksum_resp);
+    free (data);
+
+    if (c1 != c2)
+        out = -1;
+    else
+        out = 0;
+    return out;
+}
+
+}%
+
+
+
+
+
+
