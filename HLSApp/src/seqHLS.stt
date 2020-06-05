@@ -88,6 +88,12 @@ short enabled_rack[4];
 assign enabled_rack to {"enable_rack1", "enable_rack2", "enable_rack3", "enable_rack4"};
 monitor enabled_rack;
 
+short rack1_state, rack2_state, rack3_state, rack4_state;
+assign rack1_state to "state_rack1";
+assign rack2_state to "state_rack2";
+assign rack3_state to "state_rack3";
+assign rack4_state to "state_rack4";
+
 float HLS_level_data[32];
 assign HLS_level_data to {"HLS:R1_S1_L", "HLS:R1_S2_L", "HLS:R1_S3_L", "HLS:R1_S4_L", "HLS:R1_S5_L", "HLS:R1_S6_L", "HLS:R1_S7_L", "HLS:R1_S8_L",
                           "HLS:R2_S1_L", "HLS:R2_S2_L", "HLS:R2_S3_L", "HLS:R2_S4_L", "HLS:R2_S5_L", "HLS:R2_S6_L", "HLS:R2_S7_L", "HLS:R2_S8_L",
@@ -298,8 +304,20 @@ ss initAndConnectRack {
                 }
 
 	        }
+            if (rack == 1) {
+                rack1_state = rack_state[rack - 1];
+                pvPut (rack1_state);
+            } else if ( rack == 2 ) {
+                rack2_state = rack_state[rack - 1];
+                pvPut (rack2_state);
+            } else if ( rack == 3 ) {
+                rack3_state = rack_state[rack - 1];
+                pvPut (rack3_state);
+            } else {
+                rack4_state = rack_state[rack - 1];
+                pvPut (rack4_state);
+            }
             rack = 0;
-
         } state callInitCmd
     }
 

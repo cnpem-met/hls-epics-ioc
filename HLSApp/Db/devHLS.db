@@ -95,29 +95,18 @@ record(stringin, acquire_rack4) {
 }
 
 
-record(ai, cmd) {
-  field(VAL, "-1")
-}
+record (ai, cmd) { field(VAL, "-1") }
+record(ai, acq_time) { field(VAL, "5") }
 
-record(ai, acq_time) {
-  field(VAL, "5")
-}
+record (ai, enable_rack1) { field (VAL, "1") }
+record (ai, enable_rack2) { field (VAL, "0") }
+record (ai, enable_rack3) { field (VAL, "0") }
+record (ai, enable_rack4) { field (VAL, "0") }
 
-record (ai, enable_rack1) {
-  field (VAL, "1")
-}
-
-record (ai, enable_rack2) {
-  field (VAL, "0")
-}
-
-record (ai, enable_rack3) {
-  field (VAL, "0")
-}
-
-record (ai, enable_rack4) {
-  field (VAL, "0")
-}
+record (ai, state_rack1) { field (VAL, "0") }
+record (ai, state_rack2) { field (VAL, "0") }
+record (ai, state_rack3) { field (VAL, "0") }
+record (ai, state_rack4) { field (VAL, "0") }
 
 record (ai, HLS:R1_S1_L) { field (PREC, "3") }
 record (ai, HLS:R1_S2_L) { field (PREC, "3") }
