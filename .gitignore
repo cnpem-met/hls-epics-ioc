@@ -1,0 +1,15 @@
+
+bin/
+
+configure/O.Common
+configure/O.linux-x86_64
+
+db/
+dbd/
+documentation/
+lib/
+
+HLSApp/Db/O.Common
+HLSApp/Db/O.linux-x86_64
+HLSApp/src/O.Common
+HLSApp/src/O.linux-x86_64

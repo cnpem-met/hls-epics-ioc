@@ -1,0 +1,227 @@
+[Fri Jun  5 09:54:06 2020] @@@ Restarting child "HLS Daemon"
+[Fri Jun  5 09:54:06 2020] @@@    (as ./st.cmd)
+[Fri Jun  5 09:54:06 2020] @@@ The PID of new child "HLS Daemon" is: 2496
+[Fri Jun  5 09:54:06 2020] @@@ @@@ @@@ @@@ @@@
+[Fri Jun  5 09:54:06 2020] #!../../bin/linux-x86_64/HLS
+[Fri Jun  5 09:54:06 2020] ## You may have to change HLS-Test to something else
+[Fri Jun  5 09:54:06 2020] ## everywhere it appears in this file
+[Fri Jun  5 09:54:06 2020] ## Set up environment 
+[Fri Jun  5 09:54:06 2020] < envPaths
+[Fri Jun  5 09:54:06 2020] epicsEnvSet("IOC","iocHLS")
+[Fri Jun  5 09:54:06 2020] epicsEnvSet("TOP","/home/ABTLUS/rodrigo.neto/apps/HLS-ioc")
+[Fri Jun  5 09:54:06 2020] epicsEnvSet("SNCSEQ","/usr/local/epics/synApps/support/seq-2-2-5")
+[Fri Jun  5 09:54:06 2020] epicsEnvSet("ASYN","/usr/local/epics/synApps/support/asyn-R4-33")
+[Fri Jun  5 09:54:06 2020] epicsEnvSet("STREAM","/usr/local/epics/synApps/support/stream-R2-7-7c")
+[Fri Jun  5 09:54:06 2020] epicsEnvSet("SSCAN","/usr/local/epics/synApps/support/sscan-R2-11-1")
+[Fri Jun  5 09:54:06 2020] epicsEnvSet("CALC","/usr/local/epics/synApps/support/calc-R3-7-1")
+[Fri Jun  5 09:54:06 2020] epicsEnvSet("EPICS_BASE","/usr/local/epics/base")
+[Fri Jun  5 09:54:06 2020] epicsEnvSet "STREAM_PROTOCOL_PATH" "/home/ABTLUS/rodrigo.neto/apps/HLS-ioc/db"
+[Fri Jun  5 09:54:06 2020] ############################################################################### 
+[Fri Jun  5 09:54:06 2020] ## Allow PV name prefixes and serial port name to be set from the environment 
+[Fri Jun  5 09:54:06 2020] epicsEnvSet "P" "hls"
+[Fri Jun  5 09:54:06 2020] epicsEnvSet "TTY" "/dev/ttyUSB0" 
+[Fri Jun  5 09:54:06 2020] ############################################################################### 
+[Fri Jun  5 09:54:06 2020] ## Register all support components
+[Fri Jun  5 09:54:06 2020] cd "/home/ABTLUS/rodrigo.neto/apps/HLS-ioc"
+[Fri Jun  5 09:54:06 2020] dbLoadDatabase "dbd/HLS.dbd"
+[Fri Jun  5 09:54:06 2020] HLS_registerRecordDeviceDriver pdbbase
+[Fri Jun  5 09:54:06 2020] Warning: IOC is booting with TOP = "/home/ABTLUS/rodrigo.neto/apps/HLS-ioc"
+[Fri Jun  5 09:54:06 2020]           but was built with TOP = "/home/HLS/Apps/HLS-EpicsApp"
+[Fri Jun  5 09:54:06 2020] ############################################################################### 
+[Fri Jun  5 09:54:06 2020] ## Set up ASYN ports 
+[Fri Jun  5 09:54:06 2020] ## drvAsynSerialPortConfigure port ipInfo priority noAutoconnect noProcessEos 
+[Fri Jun  5 09:54:06 2020] drvAsynSerialPortConfigure("L0","/dev/ttyUSB0",0,0,1) 
+[Fri Jun  5 09:54:06 2020] asynSetOption("L0", -1, "baud", "115200") 
+[Fri Jun  5 09:54:06 2020] asynSetOption("L0", -1, "bits", "8") 
+[Fri Jun  5 09:54:06 2020] asynSetOption("L0", -1, "parity", "none") 
+[Fri Jun  5 09:54:06 2020] asynSetOption("L0", -1, "stop", "1") 
+[Fri Jun  5 09:54:06 2020] asynSetOption("L0", -1, "clocal", "N") 
+[Fri Jun  5 09:54:06 2020] asynSetOption("L0", -1, "crtscts", "N") 
+[Fri Jun  5 09:54:06 2020] ##asynOctetSetInputEos("L0", -1, "\n") 
+[Fri Jun  5 09:54:06 2020] ##asynOctetSetOutputEos("L0", -1, "\n") 
+[Fri Jun  5 09:54:06 2020] asynSetTraceIOMask("L0",0,2) 
+[Fri Jun  5 09:54:06 2020] asynSetTraceMask("L0",0,9)
+[Fri Jun  5 09:54:06 2020] ##asynSetTraceIOMask("L0",-1,0x2) 
+[Fri Jun  5 09:54:06 2020] ##asynSetTraceMask("L0",-1,0x9)
+[Fri Jun  5 09:54:06 2020] ############################################################################### 
+[Fri Jun  5 09:54:06 2020] ## Load record instances
+[Fri Jun  5 09:54:06 2020] ## dbLoadRecords("db/initRack.vdb")
+[Fri Jun  5 09:54:06 2020] dbLoadRecords("db/devHLS.db","P=hls,PORT=L0,A=0")
+[Fri Jun  5 09:54:06 2020] dbLoadRecords("db/asynRecord.db","P=HLS,R=Test,PORT=L0,ADDR=-1,IMAX=0,OMAX=0")
+[Fri Jun  5 09:54:06 2020] filename="../../../src/ioc/dbStatic/dbLexRoutines.c" line number=259
+[Fri Jun  5 09:54:06 2020] No such file or directory dbRead opening file db/asynRecord.db
+[Fri Jun  5 09:54:06 2020] cd "/home/ABTLUS/rodrigo.neto/apps/HLS-ioc/iocBoot/iocHLS"
+[Fri Jun  5 09:54:06 2020] iocInit
+[Fri Jun  5 09:54:06 2020] Starting iocInit
+[Fri Jun  5 09:54:06 2020] ############################################################################
+[Fri Jun  5 09:54:06 2020] ## EPICS R3.15.6
+[Fri Jun  5 09:54:06 2020] ## EPICS Base built Mar 19 2020
+[Fri Jun  5 09:54:06 2020] ############################################################################
+[Fri Jun  5 09:54:07 2020] iocRun: All initialization complete
+[Fri Jun  5 09:54:07 2020] ## Start any sequence programs
+[Fri Jun  5 09:54:07 2020] #seq sncxxx,"user=rodrigoneto:rodrigoneto"
+[Fri Jun  5 09:54:07 2020] seq seqHLS
+[Fri Jun  5 09:54:07 2020] sevr=info Sequencer release 2.2.5, compiled Thu Mar 19 15:07:18 2020
+[Fri Jun  5 09:54:07 2020] sevr=info Spawning sequencer program "seqHLS", thread 0x55d5b7468820: "seqHLS"
+[Fri Jun  5 09:54:07 2020] sevr=info seqHLS[0]: all channels connected & received 1st monitor
+[Fri Jun  5 09:54:07 2020] Starting...
+[Fri Jun  5 09:54:07 2020] epics> 
+[Fri Jun  5 09:54:15 2020] epics> dbl
+[Fri Jun  5 09:54:17 2020] reset_rack1
+[Fri Jun  5 09:54:17 2020] reset_rack2
+[Fri Jun  5 09:54:17 2020] reset_rack3
+[Fri Jun  5 09:54:17 2020] reset_rack4
+[Fri Jun  5 09:54:17 2020] enable_rack1
+[Fri Jun  5 09:54:17 2020] enable_rack2
+[Fri Jun  5 09:54:17 2020] enable_rack3
+[Fri Jun  5 09:54:17 2020] enable_rack4
+[Fri Jun  5 09:54:17 2020] connect_rack1
+[Fri Jun  5 09:54:17 2020] connect_rack2
+[Fri Jun  5 09:54:17 2020] connect_rack3
+[Fri Jun  5 09:54:17 2020] connect_rack4
+[Fri Jun  5 09:54:17 2020] acquire_rack2
+[Fri Jun  5 09:54:17 2020] acquire_rack3
+[Fri Jun  5 09:54:17 2020] acquire_rack4
+[Fri Jun  5 09:54:17 2020] acquire_rack1
+[Fri Jun  5 09:54:17 2020] call_init_rack
+[Fri Jun  5 09:54:17 2020] cmd
+[Fri Jun  5 09:54:17 2020] acq_time
+[Fri Jun  5 09:54:17 2020] state_rack1
+[Fri Jun  5 09:54:17 2020] state_rack2
+[Fri Jun  5 09:54:17 2020] state_rack3
+[Fri Jun  5 09:54:17 2020] state_rack4
+[Fri Jun  5 09:54:17 2020] HLS:R1_S1_L
+[Fri Jun  5 09:54:17 2020] HLS:R1_S2_L
+[Fri Jun  5 09:54:17 2020] HLS:R1_S3_L
+[Fri Jun  5 09:54:17 2020] HLS:R1_S4_L
+[Fri Jun  5 09:54:17 2020] HLS:R1_S5_L
+[Fri Jun  5 09:54:17 2020] HLS:R1_S6_L
+[Fri Jun  5 09:54:17 2020] HLS:R1_S7_L
+[Fri Jun  5 09:54:17 2020] HLS:R1_S8_L
+[Fri Jun  5 09:54:17 2020] HLS:R2_S1_L
+[Fri Jun  5 09:54:17 2020] HLS:R2_S2_L
+[Fri Jun  5 09:54:17 2020] HLS:R2_S3_L
+[Fri Jun  5 09:54:17 2020] HLS:R2_S4_L
+[Fri Jun  5 09:54:17 2020] HLS:R2_S5_L
+[Fri Jun  5 09:54:17 2020] HLS:R2_S6_L
+[Fri Jun  5 09:54:17 2020] HLS:R2_S7_L
+[Fri Jun  5 09:54:17 2020] HLS:R2_S8_L
+[Fri Jun  5 09:54:17 2020] HLS:R3_S1_L
+[Fri Jun  5 09:54:17 2020] HLS:R3_S2_L
+[Fri Jun  5 09:54:17 2020] HLS:R3_S3_L
+[Fri Jun  5 09:54:17 2020] HLS:R3_S4_L
+[Fri Jun  5 09:54:17 2020] HLS:R3_S5_L
+[Fri Jun  5 09:54:17 2020] HLS:R3_S6_L
+[Fri Jun  5 09:54:17 2020] HLS:R3_S7_L
+[Fri Jun  5 09:54:17 2020] HLS:R3_S8_L
+[Fri Jun  5 09:54:17 2020] HLS:R4_S1_L
+[Fri Jun  5 09:54:17 2020] HLS:R4_S2_L
+[Fri Jun  5 09:54:17 2020] HLS:R4_S3_L
+[Fri Jun  5 09:54:17 2020] HLS:R4_S4_L
+[Fri Jun  5 09:54:17 2020] HLS:R4_S5_L
+[Fri Jun  5 09:54:17 2020] HLS:R4_S6_L
+[Fri Jun  5 09:54:17 2020] HLS:R4_S7_L
+[Fri Jun  5 09:54:17 2020] HLS:R4_S8_L
+[Fri Jun  5 09:54:17 2020] HLS:R1_S1_T
+[Fri Jun  5 09:54:17 2020] HLS:R1_S2_T
+[Fri Jun  5 09:54:17 2020] HLS:R1_S3_T
+[Fri Jun  5 09:54:17 2020] HLS:R1_S4_T
+[Fri Jun  5 09:54:17 2020] HLS:R1_S5_T
+[Fri Jun  5 09:54:17 2020] HLS:R1_S6_T
+[Fri Jun  5 09:54:17 2020] HLS:R1_S7_T
+[Fri Jun  5 09:54:17 2020] HLS:R1_S8_T
+[Fri Jun  5 09:54:17 2020] HLS:R2_S1_T
+[Fri Jun  5 09:54:17 2020] HLS:R2_S2_T
+[Fri Jun  5 09:54:17 2020] HLS:R2_S3_T
+[Fri Jun  5 09:54:17 2020] HLS:R2_S4_T
+[Fri Jun  5 09:54:17 2020] HLS:R2_S5_T
+[Fri Jun  5 09:54:17 2020] HLS:R2_S6_T
+[Fri Jun  5 09:54:17 2020] HLS:R2_S7_T
+[Fri Jun  5 09:54:17 2020] HLS:R2_S8_T
+[Fri Jun  5 09:54:17 2020] HLS:R3_S1_T
+[Fri Jun  5 09:54:17 2020] HLS:R3_S2_T
+[Fri Jun  5 09:54:17 2020] HLS:R3_S3_T
+[Fri Jun  5 09:54:17 2020] HLS:R3_S4_T
+[Fri Jun  5 09:54:17 2020] HLS:R3_S5_T
+[Fri Jun  5 09:54:17 2020] HLS:R3_S6_T
+[Fri Jun  5 09:54:17 2020] HLS:R3_S7_T
+[Fri Jun  5 09:54:17 2020] HLS:R3_S8_T
+[Fri Jun  5 09:54:17 2020] HLS:R4_S1_T
+[Fri Jun  5 09:54:17 2020] HLS:R4_S2_T
+[Fri Jun  5 09:54:17 2020] HLS:R4_S3_T
+[Fri Jun  5 09:54:17 2020] HLS:R4_S4_T
+[Fri Jun  5 09:54:17 2020] HLS:R4_S5_T
+[Fri Jun  5 09:54:17 2020] HLS:R4_S6_T
+[Fri Jun  5 09:54:17 2020] HLS:R4_S7_T
+[Fri Jun  5 09:54:17 2020] HLS:R4_S8_T
+[Fri Jun  5 09:54:17 2020] epics> @@@ Current time: [Fri Jun  5 09:55:18 2020] 
+[Fri Jun  5 09:55:18 2020] @@@ Child process is shutting down, a new one will be restarted shortly
+[Fri Jun  5 09:55:18 2020] @@@ ^R or ^X restarts the child, ^Q quits the server
+[Fri Jun  5 09:56:51 2020] @@@ Restarting child "HLS Daemon"
+[Fri Jun  5 09:56:51 2020] @@@    (as ./iocHLS.cmd)
+[Fri Jun  5 09:56:51 2020] @@@ The PID of new child "HLS Daemon" is: 2616
+[Fri Jun  5 09:56:51 2020] @@@ @@@ @@@ @@@ @@@
+[Fri Jun  5 09:56:51 2020] #!../../bin/linux-x86_64/HLS
+[Fri Jun  5 09:56:51 2020] ## You may have to change HLS-Test to something else
+[Fri Jun  5 09:56:51 2020] ## everywhere it appears in this file
+[Fri Jun  5 09:56:51 2020] ## Set up environment 
+[Fri Jun  5 09:56:51 2020] < envPaths
+[Fri Jun  5 09:56:51 2020] epicsEnvSet("IOC","iocHLS")
+[Fri Jun  5 09:56:51 2020] epicsEnvSet("TOP","/home/ABTLUS/rodrigo.neto/apps/HLS-ioc")
+[Fri Jun  5 09:56:51 2020] epicsEnvSet("SNCSEQ","/usr/local/epics/synApps/support/seq-2-2-5")
+[Fri Jun  5 09:56:51 2020] epicsEnvSet("ASYN","/usr/local/epics/synApps/support/asyn-R4-33")
+[Fri Jun  5 09:56:51 2020] epicsEnvSet("STREAM","/usr/local/epics/synApps/support/stream-R2-7-7c")
+[Fri Jun  5 09:56:51 2020] epicsEnvSet("SSCAN","/usr/local/epics/synApps/support/sscan-R2-11-1")
+[Fri Jun  5 09:56:51 2020] epicsEnvSet("CALC","/usr/local/epics/synApps/support/calc-R3-7-1")
+[Fri Jun  5 09:56:51 2020] epicsEnvSet("EPICS_BASE","/usr/local/epics/base")
+[Fri Jun  5 09:56:51 2020] epicsEnvSet "STREAM_PROTOCOL_PATH" "/home/ABTLUS/rodrigo.neto/apps/HLS-ioc/db"
+[Fri Jun  5 09:56:51 2020] ############################################################################### 
+[Fri Jun  5 09:56:51 2020] ## Allow PV name prefixes and serial port name to be set from the environment 
+[Fri Jun  5 09:56:51 2020] epicsEnvSet "P" "hls"
+[Fri Jun  5 09:56:51 2020] epicsEnvSet "TTY" "/dev/ttyUSB0" 
+[Fri Jun  5 09:56:51 2020] ############################################################################### 
+[Fri Jun  5 09:56:51 2020] ## Register all support components
+[Fri Jun  5 09:56:51 2020] cd "/home/ABTLUS/rodrigo.neto/apps/HLS-ioc"
+[Fri Jun  5 09:56:51 2020] dbLoadDatabase "dbd/HLS.dbd"
+[Fri Jun  5 09:56:51 2020] HLS_registerRecordDeviceDriver pdbbase
+[Fri Jun  5 09:56:51 2020] Warning: IOC is booting with TOP = "/home/ABTLUS/rodrigo.neto/apps/HLS-ioc"
+[Fri Jun  5 09:56:51 2020]           but was built with TOP = "/home/HLS/Apps/HLS-EpicsApp"
+[Fri Jun  5 09:56:51 2020] ############################################################################### 
+[Fri Jun  5 09:56:51 2020] ## Set up ASYN ports 
+[Fri Jun  5 09:56:51 2020] ## drvAsynSerialPortConfigure port ipInfo priority noAutoconnect noProcessEos 
+[Fri Jun  5 09:56:51 2020] drvAsynSerialPortConfigure("L0","/dev/ttyUSB0",0,0,1) 
+[Fri Jun  5 09:56:51 2020] asynSetOption("L0", -1, "baud", "115200") 
+[Fri Jun  5 09:56:51 2020] asynSetOption("L0", -1, "bits", "8") 
+[Fri Jun  5 09:56:51 2020] asynSetOption("L0", -1, "parity", "none") 
+[Fri Jun  5 09:56:51 2020] asynSetOption("L0", -1, "stop", "1") 
+[Fri Jun  5 09:56:51 2020] asynSetOption("L0", -1, "clocal", "N") 
+[Fri Jun  5 09:56:51 2020] asynSetOption("L0", -1, "crtscts", "N") 
+[Fri Jun  5 09:56:51 2020] ##asynOctetSetInputEos("L0", -1, "\n") 
+[Fri Jun  5 09:56:51 2020] ##asynOctetSetOutputEos("L0", -1, "\n") 
+[Fri Jun  5 09:56:51 2020] asynSetTraceIOMask("L0",0,2) 
+[Fri Jun  5 09:56:51 2020] asynSetTraceMask("L0",0,9)
+[Fri Jun  5 09:56:51 2020] ##asynSetTraceIOMask("L0",-1,0x2) 
+[Fri Jun  5 09:56:51 2020] ##asynSetTraceMask("L0",-1,0x9)
+[Fri Jun  5 09:56:51 2020] ############################################################################### 
+[Fri Jun  5 09:56:51 2020] ## Load record instances
+[Fri Jun  5 09:56:51 2020] ## dbLoadRecords("db/initRack.vdb")
+[Fri Jun  5 09:56:51 2020] dbLoadRecords("db/devHLS.db","P=hls,PORT=L0,A=0")
+[Fri Jun  5 09:56:51 2020] dbLoadRecords("db/asynRecord.db","P=HLS,R=Test,PORT=L0,ADDR=-1,IMAX=0,OMAX=0")
+[Fri Jun  5 09:56:51 2020] filename="../../../src/ioc/dbStatic/dbLexRoutines.c" line number=259
+[Fri Jun  5 09:56:51 2020] No such file or directory dbRead opening file db/asynRecord.db
+[Fri Jun  5 09:56:51 2020] cd "/home/ABTLUS/rodrigo.neto/apps/HLS-ioc/iocBoot/iocHLS"
+[Fri Jun  5 09:56:51 2020] iocInit
+[Fri Jun  5 09:56:51 2020] Starting iocInit
+[Fri Jun  5 09:56:51 2020] ############################################################################
+[Fri Jun  5 09:56:51 2020] ## EPICS R3.15.6
+[Fri Jun  5 09:56:51 2020] ## EPICS Base built Mar 19 2020
+[Fri Jun  5 09:56:51 2020] ############################################################################
+[Fri Jun  5 09:56:52 2020] iocRun: All initialization complete
+[Fri Jun  5 09:56:52 2020] ## Start any sequence programs
+[Fri Jun  5 09:56:52 2020] #seq sncxxx,"user=rodrigoneto:rodrigoneto"
+[Fri Jun  5 09:56:52 2020] seq seqHLS
+[Fri Jun  5 09:56:52 2020] sevr=info Sequencer release 2.2.5, compiled Thu Mar 19 15:07:18 2020
+[Fri Jun  5 09:56:52 2020] sevr=info Spawning sequencer program "seqHLS", thread 0x55fcf6c5f800: "seqHLS"
+[Fri Jun  5 09:56:52 2020] sevr=info seqHLS[0]: all channels connected & received 1st monitor
+[Fri Jun  5 09:56:52 2020] Starting...
+[Fri Jun  5 09:56:52 2020] epics> 
