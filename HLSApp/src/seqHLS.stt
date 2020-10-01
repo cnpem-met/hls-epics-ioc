@@ -17,6 +17,8 @@ option +r;
 %%#include <stdlib.h>
 %%#include <string.h>
 %%#include <math.h>
+%%#include <assert.h>
+%%#include <time.h>
 %%#include "HLS_settings.h" /*file containing parameters of the sensors and the system's layout */
 
 %{
@@ -56,6 +58,7 @@ char *get_data (char *resp);
 int verifies_checksum (char *resp);
 void logToFile (char msg[]);
 void saveDataInFile(float *data, int idRack);
+void getTime (char *output[]);
 
 }%
 
@@ -348,6 +351,7 @@ ss initAndConnectRack {
 ss acquireData {
     state acquireData_idle {
         when ( efTestAndClear(ef_call_acquire) ) {
+            logToFile("Acquisition started\n");
             call_acq = -1;
             i = 1;
         } state selection
@@ -375,7 +379,10 @@ ss acquireData {
                 call_acq = 0;
             }
         }
-        when (efTestAndClear(ef_callback_acquire)){ /* acquisition stops when this eventFlag is set in the SS 'main' */
+
+        /* acquisition stops when this eventFlag is set in the SS 'main' */
+        when (efTestAndClear(ef_callback_acquire)){ 
+            logToFile("Acquisition stopped\n");
         } state acquireData_idle
 
         when (call_acq == 1) {
@@ -949,7 +956,15 @@ int verifies_checksum (char *resp){
 void logToFile (char msg[]) {
     log_file = fopen(logFilePath, "a");
     if(log_file != NULL) {
+        // getting the current datetime
+        char time[64];
+        getTime(&time);
+
+        // writing the message with the timestamp
+        fputs(time, log_file);
         fputs(msg, log_file);
+
+        // closing the file
         fclose(log_file);            
     }
 }
@@ -965,13 +980,31 @@ void saveDataInFile(float *data, int idRack){
     if(data_file != NULL) {
         char value[20];
         int i;
+        char time[64];
+        
+        // getting the current datetime and writing it to the file in the form os a timestamp
+        getTime(&time);
+        fputs(time, data_file);
+
+        // iterating over the array with the data and writing it on the file
         for(i=1;i<(int) data[0];i++){
-            sprintf(value, "%f ", data[i]);
+            sprintf(value, "%f\t", data[i]);
             fputs(value, data_file);
         }
         fputs("\n", data_file);        
         fclose(data_file);            
     }   
+}
+
+/* ------------------------------------- Function: getTime --------------------------------------
+- Desc: gets the current datetime and save in a array passed by reference
+- In: 
+    - char *output[]: array that will hold the timestamp text
+------------------------------------------------------------------------------------------------- */
+void getTime (char *output[]) {
+    time_t t = time(NULL);
+    struct tm *tm = localtime(&t);
+    sprintf(output, "[%d-%02d-%02d %02d:%02d:%02d] ", tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
 }
 
 }%
