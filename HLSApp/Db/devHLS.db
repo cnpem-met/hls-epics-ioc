@@ -73,24 +73,30 @@ record(waveform, acquire_rack1) {
   field(INP, "@devHLS.proto acquire(1,C7) $(PORT) $(A)")
 }
 
-record(stringin, acquire_rack2) {
+record(waveform, acquire_rack2) {
   field(DESC, "connect controller")
   field(SCAN, "Passive")
   field(DTYP, "stream")
+  field(FTVL, "CHAR")
+  field(NELM, "256")
   field(INP, "@devHLS.proto acquire(2,C6) $(PORT) $(A)")
 }
 
-record(stringin, acquire_rack3) {
+record(waveform, acquire_rack3) {
   field(DESC, "connect controller")
   field(SCAN, "Passive")
   field(DTYP, "stream")
+  field(FTVL, "CHAR")
+  field(NELM, "256")
   field(INP, "@devHLS.proto acquire(2,C5) $(PORT) $(A)")
 }
 
-record(stringin, acquire_rack4) {
+record(waveform, acquire_rack4) {
   field(DESC, "connect controller")
   field(SCAN, "Passive")
   field(DTYP, "stream")
+  field(FTVL, "CHAR")
+  field(NELM, "256")
   field(INP, "@devHLS.proto acquire(2,C4) $(PORT) $(A)")
 }
 
@@ -99,7 +105,7 @@ record (ai, cmd) { field(VAL, "-1") }
 record(ai, acq_time) { field(VAL, "5") }
 
 record (ai, enable_rack1) { field (VAL, "1") }
-record (ai, enable_rack2) { field (VAL, "0") }
+record (ai, enable_rack2) { field (VAL, "1") }
 record (ai, enable_rack3) { field (VAL, "0") }
 record (ai, enable_rack4) { field (VAL, "0") }
 

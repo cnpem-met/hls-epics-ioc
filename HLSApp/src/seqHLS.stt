@@ -38,7 +38,7 @@ struct sensor {
     struct polynomial calib_curve;
 };
 
-float  *convert_data (char resp[], struct sensor *sensor_list, float *calib_temp, char *disp_sensors[][12], int rack);
+void convert_data (char resp[], struct sensor *sensor_list, float *calib_temp, char *disp_sensors[][12], int rack, float **data_conv);
 void create_calibCurves(float calib_list[][4], struct sensor *sensor_list);
 int calc_checksum (const char *data);
 int bin_to_int (char *s);
@@ -48,6 +48,7 @@ char *leastSign8BitArray (char *in);
 char *trim_array (char *in, int ini, int fim);
 char *get_data (char *resp);
 int verifies_checksum (char *resp);
+void logToFile (char msg[]);
 
 }%
 
@@ -136,8 +137,6 @@ short rack_state[4] = {0, 0, 0, 0};
 short call_init, call_acq;
 
 
-
-
 /*------------------------------------------------------------------------------------------------
   ------------------------------------------------------------------------------------------------
   ------------------------ Beginning of the state logic implementation  --------------------------
@@ -146,10 +145,10 @@ short call_init, call_acq;
 
 
 /* ---------------------------------------- State Set 1: main ----------------------------------------
-- Desc: responsible for handle external calls to the functions
+- Desc: responsible for handling external calls to the functions
 - States:
-	- init: initization of variables and eventFlags
-	- idle: state to the program to be while waiting for next external commands
+	- init: initialization of variables and eventFlags
+	- idle: state for the program to be while waiting for next external commands
 ------------------------------------------------------------------------------------------------------*/
 ss main {
     state init {
@@ -173,7 +172,7 @@ ss main {
     state idle {
         when (){
             pvGet(command);
-            if (command == 1){ /* external call for initialize racks */
+            if (command == 1){ /* external call to initialize racks */
                 efSet (ef_call_init);
                 command = -1;
                 pvPut (command);
@@ -412,7 +411,7 @@ ss acquireData {
             resp = acquire_racks1;
             
             /* converts raw data into engineering units, i.e. level [mm] and temperature [C] */
-            data_conv = convert_data (resp, sensors, calib_temp, disp_sensors, 1);
+            convert_data (resp, sensors, calib_temp, disp_sensors, 1, &data_conv);
             
             /* stores the converted values in its respective PVs */
             for ( j = 1; j < (int) data_conv[0]; j++ ){
@@ -426,16 +425,16 @@ ss acquireData {
                     pvPut (HLS_temp_data[8*(rack - 1) + (int) (j - 1)/2]);
                 }
             }
-
             free (data_conv);
         } state selection
         
         /* case of acquisition of sensor data from the rack 2 */
         when (rack == 2 && pvPutComplete(acquire_racks2)){
+
             pvGet (acquire_racks2);
             resp = acquire_racks2;
-            
-            data_conv = convert_data (resp, sensors, calib_temp, disp_sensors, 1);
+
+            convert_data (resp, sensors, calib_temp, disp_sensors, 2, &data_conv);
             
             for ( j = 1; j < (int) data_conv[0]; j++ ){
                 if (j % 2 != 0) { 
@@ -446,6 +445,7 @@ ss acquireData {
                     pvPut (HLS_temp_data[8*(rack - 1) + (int) (j - 1)/2]);
                 }
             }
+            free (data_conv);
         } state selection
 
         /* case of acquisition of sensor data from the rack 3 */
@@ -453,7 +453,7 @@ ss acquireData {
             pvGet (acquire_racks3);
             resp = acquire_racks3;
             
-            data_conv = convert_data (resp, sensors, calib_temp, disp_sensors, 1);
+            convert_data (resp, sensors, calib_temp, disp_sensors, 3, &data_conv);
             
             for ( j = 1; j < (int) data_conv[0]; j++ ){
                 if (j % 2 != 0) { 
@@ -464,6 +464,8 @@ ss acquireData {
                     pvPut (HLS_temp_data[8*(rack - 1) + (int) (j - 1)/2]);
                 }
             }
+
+            free (data_conv);
         } state selection
 
         /* case of acquisition of sensor data from the rack 4 */
@@ -471,7 +473,7 @@ ss acquireData {
             pvGet (acquire_racks4);
             resp = acquire_racks4;
             
-            data_conv = convert_data (resp, sensors, calib_temp, disp_sensors, 1);
+            convert_data (resp, sensors, calib_temp, disp_sensors, 4, &data_conv);
             
             for ( j = 1; j < (int) data_conv[0]; j++ ){
                 if (j % 2 != 0) { 
@@ -482,6 +484,8 @@ ss acquireData {
                     pvPut (HLS_temp_data[8*(rack - 1) + (int) (j - 1)/2]);
                 }
             }
+
+            free (data_conv);	
         } state selection
 
     }
@@ -497,6 +501,8 @@ ss acquireData {
   ------------------------------------------------------------------------------------------------ */
 
 %{
+
+FILE *log_file;
 
 /* ------------------------------------- Function: hex_to_dec --------------------------------------
 - Desc: converts hexadecimal based values to decimal ones
@@ -541,7 +547,8 @@ int hex_to_dec (char hex){
 - Out: 
     - float *data_output: array with the converted values of level and temperature;
 ----------------------------------------------------------------------------------------------------*/
-float  *convert_data (char resp[], struct sensor *sensor_list, float *calib_temp, char *disp_sensors[][12], int rack){
+void convert_data (char resp[], struct sensor *sensor_list, float *calib_temp, char *disp_sensors[][12], int rack, float **data_conv){
+
     int resp_int[250];
     char tmp1[9], tmp2[9], tmp3[9], tmp4[9], tmp5[9], tmp6[9], tmp7[9], tmp8[9], tmp[35];
     char *tmp_exp, *tmp_mant;
@@ -552,9 +559,11 @@ float  *convert_data (char resp[], struct sensor *sensor_list, float *calib_temp
     struct sensor *s;
     int poly_exp[4];
     float poly_coeff[4], data_D, data_T;
-    float *data_output = malloc (17*sizeof(float));
     char mant_char[10];
+    float *data_output = malloc (17*sizeof(**data_conv));    
 
+    *data_conv = data_output;
+    
     /* storing the length of the array at its first position */
     data_output[0] = 17;
     
@@ -592,7 +601,7 @@ float  *convert_data (char resp[], struct sensor *sensor_list, float *calib_temp
             strcpy(sig,"");
         else
             strcpy(sig,"-");
-        
+
         /* collecting the exponent and mantissa of the data */
         tmp_exp = trim_array(tmp, 1, strlen(tmp) -9);
         tmp_mant = trim_array(tmp, 9, 0);
@@ -640,9 +649,49 @@ float  *convert_data (char resp[], struct sensor *sensor_list, float *calib_temp
             data_output[i+1] = data_T;
         }
     }
-    return data_output;
 }
 
+/* ------------------------------------- Function: log --------------------------------------
+- Desc: writes content to an external log file
+- In: 
+    - char *in: message
+---------------------------------------------------------------------------------------------------- */
+void logToFile (char msg[]) {
+    log_file = fopen("log/iocHLS.log", "a");
+    if(log_file != NULL) {
+        fputs(msg, log_file);
+        fclose(log_file);            
+    }
+}
+
+
+/* ------------------------------------- Function: trim_array --------------------------------------
+- Desc: generic function to trim an array in specific positions, generating a new array
+- In: 
+    - char *in: array to be trimmed
+    - int ini: number of initial elements of the array to ignore
+    - int fim: number of final elements of the array to ignore
+- Out:
+    - char *aux: trimmed array
+---------------------------------------------------------------------------------------------------- */
+char *trim_array (char *in, int ini, int fim){
+    char *aux = (char*) malloc ((strlen(in)-(ini+fim)+2)*sizeof(char));
+    char *a, *b;
+    int k = strlen(in) - 1 - fim;
+
+    for (int i=0; i<ini; i++)
+        in ++;
+
+    a = in;
+    b = aux;
+
+    while (k>0){
+        *b++ = *a++;
+        k--;
+    }
+
+    return aux;
+}
 
 /* ---------------------------------- Function: create_calibCurves -----------------------------------
 - Desc: stores calibration data into the structured sensor's list
@@ -839,34 +888,6 @@ int calc_checksum (const char *data){
 
     return sum;
 
-}
-
-/* ------------------------------------- Function: trim_array --------------------------------------
-- Desc: generic function to trim an array in specific positions, generating a new array
-- In: 
-    - char *in: array to be trimmed
-    - int ini: number of initial elements of the array to ignore
-    - int fim: number of final elements of the array to ignore
-- Out:
-    - char *aux: trimmed array
----------------------------------------------------------------------------------------------------- */
-char *trim_array (char *in, int ini, int fim){
-    char *aux = (char*) malloc ((strlen(in)-(ini+fim)+2)*sizeof(char));
-    char *a, *b;
-    int k = strlen(in) -1 - fim;
-
-    for (int i=0; i<ini; i++)
-        in ++;
-
-    a = in;
-    b = aux;
-
-    while (k>0){
-        *b++ = *a++;
-        k--;
-    }
-
-    return aux;
 }
 
 
