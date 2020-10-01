@@ -21,6 +21,12 @@ option +r;
 
 %{
 
+// Global variables
+char logFilePath[] = "log/iocHLS.log";
+char *dataFilePath[] = {"data/rack1.csv", "data/rack2.csv", "data/rack3.csv", "data/rack4.csv"};
+FILE *log_file;
+FILE *data_file;
+
 /* estruturas para conter diferentes definições, sendo elas:
     - poly: um termo de um polinomio
     - calib_curve: a curva de calibração de um sensor, que consiste em um polinomio de 3o grau
@@ -49,6 +55,7 @@ char *trim_array (char *in, int ini, int fim);
 char *get_data (char *resp);
 int verifies_checksum (char *resp);
 void logToFile (char msg[]);
+void saveDataInFile(float *data, int idRack);
 
 }%
 
@@ -154,6 +161,7 @@ ss main {
     state init {
         when (pvConnectCount() == pvChannelCount() ) {
             printf("Starting...\n");
+            logToFile("Starting...\n");
 
             /* filling up the sensors structure with sensors IDs and its respective 
                calibration curves in the form of 3rd degree polynomial */
@@ -289,16 +297,19 @@ ss initAndConnectRack {
                 rack_state[rack - 1] = -1; /* state 1: rack is OFF */
                 strcat(msg, msg_error_conn); strcat(msg, msg_error_list[rack - 1]);
                 printf(msg);
+                logToFile(msg);
             } else {
                 if((int) resp[5] == 6){
                     if (verifies_checksum(resp) == -1){
                         rack_state[rack - 1] = -2; /* state 2: error in checksum */
                         strcat(msg, msg_error_check); strcat(msg, msg_error_list[rack - 1]);
                         printf(msg);
+                        logToFile(msg);
                     } else {
                         rack_state[rack - 1] = 1; /* state 3: sucessfuly connected */
                         strcat(msg, msg_sucess); strcat(msg, msg_error_list[rack - 1]);
                         printf(msg);
+                        logToFile(msg);
                     }
                 }
 
@@ -413,12 +424,16 @@ ss acquireData {
             /* converts raw data into engineering units, i.e. level [mm] and temperature [C] */
             convert_data (resp, sensors, calib_temp, disp_sensors, 1, &data_conv);
             
+            /* saving the data into local files */                    
+            saveDataInFile(data_conv, 1);
+
             /* stores the converted values in its respective PVs */
             for ( j = 1; j < (int) data_conv[0]; j++ ){
                 if (j % 2 != 0) { 
                     /* level data is at the odd index positions of the array */ 
                     HLS_level_data[8*(rack - 1) + (int) j/2] = data_conv [j];
                     pvPut (HLS_level_data[8*(rack - 1) + (int) j/2]);
+                    
                 } else {
                     /* temperature data is at the even index positions of the array */ 
                     HLS_temp_data[8*(rack - 1) + (int) (j - 1)/2] = data_conv [j];
@@ -435,6 +450,8 @@ ss acquireData {
             resp = acquire_racks2;
 
             convert_data (resp, sensors, calib_temp, disp_sensors, 2, &data_conv);
+                  
+            saveDataInFile(data_conv, 2);
             
             for ( j = 1; j < (int) data_conv[0]; j++ ){
                 if (j % 2 != 0) { 
@@ -454,6 +471,8 @@ ss acquireData {
             resp = acquire_racks3;
             
             convert_data (resp, sensors, calib_temp, disp_sensors, 3, &data_conv);
+
+            saveDataInFile(data_conv, 3);
             
             for ( j = 1; j < (int) data_conv[0]; j++ ){
                 if (j % 2 != 0) { 
@@ -474,6 +493,8 @@ ss acquireData {
             resp = acquire_racks4;
             
             convert_data (resp, sensors, calib_temp, disp_sensors, 4, &data_conv);
+
+            saveDataInFile(data_conv, 4);
             
             for ( j = 1; j < (int) data_conv[0]; j++ ){
                 if (j % 2 != 0) { 
@@ -501,8 +522,6 @@ ss acquireData {
   ------------------------------------------------------------------------------------------------ */
 
 %{
-
-FILE *log_file;
 
 /* ------------------------------------- Function: hex_to_dec --------------------------------------
 - Desc: converts hexadecimal based values to decimal ones
@@ -553,12 +572,12 @@ void convert_data (char resp[], struct sensor *sensor_list, float *calib_temp, c
     char tmp1[9], tmp2[9], tmp3[9], tmp4[9], tmp5[9], tmp6[9], tmp7[9], tmp8[9], tmp[35];
     char *tmp_exp, *tmp_mant;
     char sig[2];
-    int i, j, exp, data_V;
+    int i, j, exp;
     float mant;
     char data_V_char[11], *sens_ID;
     struct sensor *s;
     int poly_exp[4];
-    float poly_coeff[4], data_D, data_T;
+    float poly_coeff[4], data_D, data_T, data_V;
     char mant_char[10];
     float *data_output = malloc (17*sizeof(**data_conv));    
 
@@ -614,8 +633,8 @@ void convert_data (char resp[], struct sensor *sensor_list, float *calib_temp, c
         strcat(data_V_char, sig);
         sprintf(mant_char, "%f", mant);
         strcat(data_V_char, mant_char);
-        mant = (float) strtol(data_V_char, NULL, 10);
-        
+        mant = strtod(data_V_char, NULL);        
+
         /* obtaining the value of the data in Volts */
         data_V = (float) pow(mant*2, exp);
 
@@ -650,20 +669,6 @@ void convert_data (char resp[], struct sensor *sensor_list, float *calib_temp, c
         }
     }
 }
-
-/* ------------------------------------- Function: log --------------------------------------
-- Desc: writes content to an external log file
-- In: 
-    - char *in: message
----------------------------------------------------------------------------------------------------- */
-void logToFile (char msg[]) {
-    log_file = fopen("log/iocHLS.log", "a");
-    if(log_file != NULL) {
-        fputs(msg, log_file);
-        fclose(log_file);            
-    }
-}
-
 
 /* ------------------------------------- Function: trim_array --------------------------------------
 - Desc: generic function to trim an array in specific positions, generating a new array
@@ -934,6 +939,39 @@ int verifies_checksum (char *resp){
     else
         out = 0;
     return out;
+}
+
+/* ------------------------------------- Function: logToFile --------------------------------------
+- Desc: writes content to an external log file
+- In: 
+    - char *in: message
+--------------------------------------------------------------------------------------------------- */
+void logToFile (char msg[]) {
+    log_file = fopen(logFilePath, "a");
+    if(log_file != NULL) {
+        fputs(msg, log_file);
+        fclose(log_file);            
+    }
+}
+
+/* ------------------------------------- Function: saveDataInFile --------------------------------------
+- Desc: stores the converted data in local files
+- In: 
+    - float *data: array with the data in eng. units
+    - int idRack: number of the rack (1, 2, 3 or 4)
+-------------------------------------------------------------------------------------------------------- */
+void saveDataInFile(float *data, int idRack){ 
+    data_file = fopen(dataFilePath[idRack-1], "a");
+    if(data_file != NULL) {
+        char value[20];
+        int i;
+        for(i=1;i<(int) data[0];i++){
+            sprintf(value, "%f ", data[i]);
+            fputs(value, data_file);
+        }
+        fputs("\n", data_file);        
+        fclose(data_file);            
+    }   
 }
 
 }%

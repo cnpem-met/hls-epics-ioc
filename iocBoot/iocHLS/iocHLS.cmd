@@ -48,3 +48,7 @@ iocInit
 ## Start any sequence programs
 #seq sncxxx,"user=rodrigoneto:rodrigoneto"
 seq seqHLS
+epicsThreadSleep(2)
+dbpf cmd 1
+epicsThreadSleep(2)
+dbpf cmd 2

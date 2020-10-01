@@ -13,3 +13,12 @@ HLSApp/Db/O.Common
 HLSApp/Db/O.linux-x86_64
 HLSApp/src/O.Common
 HLSApp/src/O.linux-x86_64
+
+iocBoot/iocHLS/log/*
+iocBoot/iocHLS/data/*
+
+iocBoot/iocHLS/procServ/*.log
+
+!iocBoot/iocHLS/log/.keep
+!iocBoot/iocHLS/data/.keep
+
