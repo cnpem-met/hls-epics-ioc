@@ -88,7 +88,7 @@ record(waveform, acquire_rack3) {
   field(DTYP, "stream")
   field(FTVL, "CHAR")
   field(NELM, "256")
-  field(INP, "@devHLS.proto acquire(2,C5) $(PORT) $(A)")
+  field(INP, "@devHLS.proto acquire(3,C5) $(PORT) $(A)")
 }
 
 record(waveform, acquire_rack4) {
@@ -97,88 +97,88 @@ record(waveform, acquire_rack4) {
   field(DTYP, "stream")
   field(FTVL, "CHAR")
   field(NELM, "256")
-  field(INP, "@devHLS.proto acquire(2,C4) $(PORT) $(A)")
+  field(INP, "@devHLS.proto acquire(4,C4) $(PORT) $(A)")
 }
 
 
 record (ai, cmd) { field(VAL, "-1") }
-record(ai, acq_time) { field(VAL, "5") }
+record(ai, acq_time) { field(VAL, "30") }
 
 record (ai, enable_rack1) { field (VAL, "1") }
 record (ai, enable_rack2) { field (VAL, "1") }
-record (ai, enable_rack3) { field (VAL, "0") }
-record (ai, enable_rack4) { field (VAL, "0") }
+record (ai, enable_rack3) { field (VAL, "1") }
+record (ai, enable_rack4) { field (VAL, "1") }
 
 record (ai, state_rack1) { field (VAL, "0") }
 record (ai, state_rack2) { field (VAL, "0") }
 record (ai, state_rack3) { field (VAL, "0") }
 record (ai, state_rack4) { field (VAL, "0") }
 
-record (ai, HLS:R1_S1_L) { field (PREC, "3") }
-record (ai, HLS:R1_S2_L) { field (PREC, "3") }
-record (ai, HLS:R1_S3_L) { field (PREC, "3") }
-record (ai, HLS:R1_S4_L) { field (PREC, "3") }
-record (ai, HLS:R1_S5_L) { field (PREC, "3") }
-record (ai, HLS:R1_S6_L) { field (PREC, "3") }
-record (ai, HLS:R1_S7_L) { field (PREC, "3") }
-record (ai, HLS:R1_S8_L) { field (PREC, "3") }
-record (ai, HLS:R2_S1_L) { field (PREC, "3") }
-record (ai, HLS:R2_S2_L) { field (PREC, "3") }
-record (ai, HLS:R2_S3_L) { field (PREC, "3") }
-record (ai, HLS:R2_S4_L) { field (PREC, "3") }
-record (ai, HLS:R2_S5_L) { field (PREC, "3") }
-record (ai, HLS:R2_S6_L) { field (PREC, "3") }
-record (ai, HLS:R2_S7_L) { field (PREC, "3") }
-record (ai, HLS:R2_S8_L) { field (PREC, "3") }
-record (ai, HLS:R3_S1_L) { field (PREC, "3") }
-record (ai, HLS:R3_S2_L) { field (PREC, "3") }
-record (ai, HLS:R3_S3_L) { field (PREC, "3") }
-record (ai, HLS:R3_S4_L) { field (PREC, "3") }
-record (ai, HLS:R3_S5_L) { field (PREC, "3") }
-record (ai, HLS:R3_S6_L) { field (PREC, "3") }
-record (ai, HLS:R3_S7_L) { field (PREC, "3") }
-record (ai, HLS:R3_S8_L) { field (PREC, "3") }
-record (ai, HLS:R4_S1_L) { field (PREC, "3") }
-record (ai, HLS:R4_S2_L) { field (PREC, "3") }
-record (ai, HLS:R4_S3_L) { field (PREC, "3") }
-record (ai, HLS:R4_S4_L) { field (PREC, "3") }
-record (ai, HLS:R4_S5_L) { field (PREC, "3") }
-record (ai, HLS:R4_S6_L) { field (PREC, "3") }
-record (ai, HLS:R4_S7_L) { field (PREC, "3") }
-record (ai, HLS:R4_S8_L) { field (PREC, "3") }
+record (ai, HLS:C1_S1_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C1_S2_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C1_S3_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C1_S4_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C1_S5_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C1_S6_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C1_S7_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C1_S8_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C2_S1_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C2_S2_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C2_S3_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C2_S4_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C2_S5_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C2_S6_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C2_S7_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C2_S8_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C3_S1_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C3_S2_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C3_S3_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C3_S4_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C3_S5_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C3_S6_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C3_S7_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C3_S8_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C4_S1_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C4_S2_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C4_S3_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C4_S4_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C4_S5_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C4_S6_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C4_S7_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C4_S8_LEVEL) { field (PREC, "3") }
 
-record (ai, HLS:R1_S1_T) { field (PREC, "3") }
-record (ai, HLS:R1_S2_T) { field (PREC, "3") }
-record (ai, HLS:R1_S3_T) { field (PREC, "3") }
-record (ai, HLS:R1_S4_T) { field (PREC, "3") }
-record (ai, HLS:R1_S5_T) { field (PREC, "3") }
-record (ai, HLS:R1_S6_T) { field (PREC, "3") }
-record (ai, HLS:R1_S7_T) { field (PREC, "3") }
-record (ai, HLS:R1_S8_T) { field (PREC, "3") }
-record (ai, HLS:R2_S1_T) { field (PREC, "3") }
-record (ai, HLS:R2_S2_T) { field (PREC, "3") }
-record (ai, HLS:R2_S3_T) { field (PREC, "3") }
-record (ai, HLS:R2_S4_T) { field (PREC, "3") }
-record (ai, HLS:R2_S5_T) { field (PREC, "3") }
-record (ai, HLS:R2_S6_T) { field (PREC, "3") }
-record (ai, HLS:R2_S7_T) { field (PREC, "3") }
-record (ai, HLS:R2_S8_T) { field (PREC, "3") }
-record (ai, HLS:R3_S1_T) { field (PREC, "3") }
-record (ai, HLS:R3_S2_T) { field (PREC, "3") }
-record (ai, HLS:R3_S3_T) { field (PREC, "3") }
-record (ai, HLS:R3_S4_T) { field (PREC, "3") }
-record (ai, HLS:R3_S5_T) { field (PREC, "3") }
-record (ai, HLS:R3_S6_T) { field (PREC, "3") }
-record (ai, HLS:R3_S7_T) { field (PREC, "3") }
-record (ai, HLS:R3_S8_T) { field (PREC, "3") }
-record (ai, HLS:R4_S1_T) { field (PREC, "3") }
-record (ai, HLS:R4_S2_T) { field (PREC, "3") }
-record (ai, HLS:R4_S3_T) { field (PREC, "3") }
-record (ai, HLS:R4_S4_T) { field (PREC, "3") }
-record (ai, HLS:R4_S5_T) { field (PREC, "3") }
-record (ai, HLS:R4_S6_T) { field (PREC, "3") }
-record (ai, HLS:R4_S7_T) { field (PREC, "3") }
-record (ai, HLS:R4_S8_T) { field (PREC, "3") }
+record (ai, HLS:C1_S1_TEMP) { field (PREC, "3") }
+record (ai, HLS:C1_S2_TEMP) { field (PREC, "3") }
+record (ai, HLS:C1_S3_TEMP) { field (PREC, "3") }
+record (ai, HLS:C1_S4_TEMP) { field (PREC, "3") }
+record (ai, HLS:C1_S5_TEMP) { field (PREC, "3") }
+record (ai, HLS:C1_S6_TEMP) { field (PREC, "3") }
+record (ai, HLS:C1_S7_TEMP) { field (PREC, "3") }
+record (ai, HLS:C1_S8_TEMP) { field (PREC, "3") }
+record (ai, HLS:C2_S1_TEMP) { field (PREC, "3") }
+record (ai, HLS:C2_S2_TEMP) { field (PREC, "3") }
+record (ai, HLS:C2_S3_TEMP) { field (PREC, "3") }
+record (ai, HLS:C2_S4_TEMP) { field (PREC, "3") }
+record (ai, HLS:C2_S5_TEMP) { field (PREC, "3") }
+record (ai, HLS:C2_S6_TEMP) { field (PREC, "3") }
+record (ai, HLS:C2_S7_TEMP) { field (PREC, "3") }
+record (ai, HLS:C2_S8_TEMP) { field (PREC, "3") }
+record (ai, HLS:C3_S1_TEMP) { field (PREC, "3") }
+record (ai, HLS:C3_S2_TEMP) { field (PREC, "3") }
+record (ai, HLS:C3_S3_TEMP) { field (PREC, "3") }
+record (ai, HLS:C3_S4_TEMP) { field (PREC, "3") }
+record (ai, HLS:C3_S5_TEMP) { field (PREC, "3") }
+record (ai, HLS:C3_S6_TEMP) { field (PREC, "3") }
+record (ai, HLS:C3_S7_TEMP) { field (PREC, "3") }
+record (ai, HLS:C3_S8_TEMP) { field (PREC, "3") }
+record (ai, HLS:C4_S1_TEMP) { field (PREC, "3") }
+record (ai, HLS:C4_S2_TEMP) { field (PREC, "3") }
+record (ai, HLS:C4_S3_TEMP) { field (PREC, "3") }
+record (ai, HLS:C4_S4_TEMP) { field (PREC, "3") }
+record (ai, HLS:C4_S5_TEMP) { field (PREC, "3") }
+record (ai, HLS:C4_S6_TEMP) { field (PREC, "3") }
+record (ai, HLS:C4_S7_TEMP) { field (PREC, "3") }
+record (ai, HLS:C4_S8_TEMP) { field (PREC, "3") }
 
 
 

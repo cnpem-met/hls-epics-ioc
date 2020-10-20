@@ -59,6 +59,7 @@ int verifies_checksum (char *resp);
 void logToFile (char msg[]);
 void saveDataInFile(float *data, int idRack);
 void getTime (char *output[]);
+float evalPol (float *pol, int order, float variable);
 
 }%
 
@@ -106,16 +107,16 @@ assign rack3_state to "state_rack3";
 assign rack4_state to "state_rack4";
 
 float HLS_level_data[32];
-assign HLS_level_data to {"HLS:R1_S1_L", "HLS:R1_S2_L", "HLS:R1_S3_L", "HLS:R1_S4_L", "HLS:R1_S5_L", "HLS:R1_S6_L", "HLS:R1_S7_L", "HLS:R1_S8_L",
-                          "HLS:R2_S1_L", "HLS:R2_S2_L", "HLS:R2_S3_L", "HLS:R2_S4_L", "HLS:R2_S5_L", "HLS:R2_S6_L", "HLS:R2_S7_L", "HLS:R2_S8_L",
-                          "HLS:R3_S1_L", "HLS:R3_S2_L", "HLS:R3_S3_L", "HLS:R3_S4_L", "HLS:R3_S5_L", "HLS:R3_S6_L", "HLS:R3_S7_L", "HLS:R3_S8_L", 
-                          "HLS:R4_S1_L", "HLS:R4_S2_L", "HLS:R4_S3_L", "HLS:R4_S4_L", "HLS:R4_S5_L", "HLS:R4_S6_L", "HLS:R4_S7_L", "HLS:R4_S8_L" };
+assign HLS_level_data to {"HLS:C1_S1_LEVEL", "HLS:C1_S2_LEVEL", "HLS:C1_S3_LEVEL", "HLS:C1_S4_LEVEL", "HLS:C1_S5_LEVEL", "HLS:C1_S6_LEVEL", "HLS:C1_S7_LEVEL", "HLS:C1_S8_LEVEL",
+                          "HLS:C2_S1_LEVEL", "HLS:C2_S2_LEVEL", "HLS:C2_S3_LEVEL", "HLS:C2_S4_LEVEL", "HLS:C2_S5_LEVEL", "HLS:C2_S6_LEVEL", "HLS:C2_S7_LEVEL", "HLS:C2_S8_LEVEL",
+                          "HLS:C3_S1_LEVEL", "HLS:C3_S2_LEVEL", "HLS:C3_S3_LEVEL", "HLS:C3_S4_LEVEL", "HLS:C3_S5_LEVEL", "HLS:C3_S6_LEVEL", "HLS:C3_S7_LEVEL", "HLS:C3_S8_LEVEL", 
+                          "HLS:C4_S1_LEVEL", "HLS:C4_S2_LEVEL", "HLS:C4_S3_LEVEL", "HLS:C4_S4_LEVEL", "HLS:C4_S5_LEVEL", "HLS:C4_S6_LEVEL", "HLS:C4_S7_LEVEL", "HLS:C4_S8_LEVEL" };
 
 float HLS_temp_data[32];
-assign HLS_temp_data to {"HLS:R1_S1_T", "HLS:R1_S2_T", "HLS:R1_S3_T", "HLS:R1_S4_T", "HLS:R1_S5_T", "HLS:R1_S6_T", "HLS:R1_S7_T", "HLS:R1_S8_T",
-                         "HLS:R2_S1_T", "HLS:R2_S2_T", "HLS:R2_S3_T", "HLS:R2_S4_T", "HLS:R2_S5_T", "HLS:R2_S6_T", "HLS:R2_S7_T", "HLS:R2_S8_T",
-                         "HLS:R3_S1_T", "HLS:R3_S2_T", "HLS:R3_S3_T", "HLS:R3_S4_T", "HLS:R3_S5_T", "HLS:R3_S6_T", "HLS:R3_S7_T", "HLS:R3_S8_T", 
-                         "HLS:R4_S1_T", "HLS:R4_S2_T", "HLS:R4_S3_T", "HLS:R4_S4_T", "HLS:R4_S5_T", "HLS:R4_S6_T", "HLS:R4_S7_T", "HLS:R4_S8_T" };
+assign HLS_temp_data to {"HLS:C1_S1_TEMP", "HLS:C1_S2_TEMP", "HLS:C1_S3_TEMP", "HLS:C1_S4_TEMP", "HLS:C1_S5_TEMP", "HLS:C1_S6_TEMP", "HLS:C1_S7_TEMP", "HLS:C1_S8_TEMP",
+                         "HLS:C2_S1_TEMP", "HLS:C2_S2_TEMP", "HLS:C2_S3_TEMP", "HLS:C2_S4_TEMP", "HLS:C2_S5_TEMP", "HLS:C2_S6_TEMP", "HLS:C2_S7_TEMP", "HLS:C2_S8_TEMP",
+                         "HLS:C3_S1_TEMP", "HLS:C3_S2_TEMP", "HLS:C3_S3_TEMP", "HLS:C3_S4_TEMP", "HLS:C3_S5_TEMP", "HLS:C3_S6_TEMP", "HLS:C3_S7_TEMP", "HLS:C3_S8_TEMP", 
+                         "HLS:C4_S1_TEMP", "HLS:C4_S2_TEMP", "HLS:C4_S3_TEMP", "HLS:C4_S4_TEMP", "HLS:C4_S5_TEMP", "HLS:C4_S6_TEMP", "HLS:C4_S7_TEMP", "HLS:C4_S8_TEMP" };
 
 
 /*------------------------------------------------------------------------------------------------
@@ -675,6 +676,32 @@ void convert_data (char resp[], struct sensor *sensor_list, float *calib_temp, c
             data_output[i+1] = data_T;
         }
     }
+
+
+	/* Applying the dilatation correction to the level measurements
+	Obs: variables such as 'dilCorr_pol', 'Tref', 'Hdiff' and 'pt' are defined on HLS_settings.h */
+	
+	float sensTemp, sensLevelOld, Cag, Cdag, Cm;	
+    for (i=0; i<8;i++){
+    	sensTemp = data_output[2+2*i];
+    	sensLevelOld = data_output[1+2*i];
+    	Cag = (evalPol(dilCorr_pol, 3, sensTemp) - evalPol(dilCorr_pol, 3, Tref)) / (1e5 - evalPol(dilCorr_pol, 3, sensTemp));
+    	Cdag = (Hdiff - sensLevelOld - pt) * Cag;
+    	Cm = Hdiff * Cdil_vessel * 1e-6 * (sensTemp - Tref);
+
+    	data_output[1+2*i] = sensLevelOld + Cdag - Cm;
+    }
+}
+
+float evalPol (float *pol, int order, float variable) {
+	int i;
+	int exp = order;
+	float result = 0;
+	for (i=0;i<(order+1);i++){
+		result += pol[i] * pow (variable, exp);
+		exp --;
+	}
+	return result;
 }
 
 /* ------------------------------------- Function: trim_array --------------------------------------
@@ -1004,7 +1031,7 @@ void saveDataInFile(float *data, int idRack){
 void getTime (char *output[]) {
     time_t t = time(NULL);
     struct tm *tm = localtime(&t);
-    sprintf(output, "[%d-%02d-%02d %02d:%02d:%02d] ", tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+    sprintf(output, "%d-%02d-%02d %02d:%02d:%02d\t", tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
 }
 
 }%

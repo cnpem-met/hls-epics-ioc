@@ -47,3 +47,10 @@ float calib_list[30][4] =
 
 /* calibration parameters for the temperature convertion of the temperature probes of the sensors */
 float calib_temp[2] = {5.00352, -0.4045};
+
+/* specific parameters for dilatation correction in the level measurements */
+float dilCorr_pol[4] = {-0.0036023, 0.75406167, -5.2344, 8.4976};
+int Tref = 20;
+int Hdiff = 54;
+int Cdil_vessel = 17; 
+int pt = 11;

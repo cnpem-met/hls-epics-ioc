@@ -18,6 +18,7 @@ iocBoot/iocHLS/log/*
 iocBoot/iocHLS/data/*
 
 iocBoot/iocHLS/procServ/*.log
+iocBoot/iocHLS/procServ/PIDinfo
 
 !iocBoot/iocHLS/log/.keep
 !iocBoot/iocHLS/data/.keep
