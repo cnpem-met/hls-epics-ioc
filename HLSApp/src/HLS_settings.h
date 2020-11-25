@@ -5,10 +5,10 @@
 
 /* layout of the sensors, i.e. the relation between specific sensors and the rack that they are plugged in */
 char *disp_sensors[9][12] =
-    {{"H7DC_032", "H7DC_033", "H7DC_034", "H7DC_035", "H7DC_036", "H7DC_037", "H7DC_038", "H7DC_039"}, /* Sensors connected to Rack 1 */
-     {"H7DC_040", "H7DC_041", "H7DC_042", "H7DC_043", "H7DC_044", "H7DC_045", "H7DC_046", "H7DC_047"}, /* Rack 2 */
-     {"H7DC_048", "H7DC_049", "H7DC_050", "H7DC_051", "H7DC_052", "H7DC_053", "H7DC_054", "H7DC_055"}, /* Rack 3 */
-     {"H7DC_056", "H7DC_057", "H7DC_058", "H7DC_059", "H7DC_060", "H7DC_061", "N/C", "N/C"}}; /* Rack 4 */
+    {{"H7DC_054", "H7DC_033", "H7DC_043", "H7DC_059", "H7DC_051", "N/C", "N/C", "N/C"}, /* Sensors connected to Rack 1 */
+     {"H7DC_041", "H7DC_046", "H7DC_038", "H7DC_056", "H7DC_047", "N/C", "N/C", "N/C"}, /* Rack 2 */
+     {"H7DC_036", "H7DC_039", "H7DC_035", "H7DC_044", "H7DC_034", "N/C", "N/C", "N/C"}, /* Rack 3 */
+     {"H7DC_050", "H7DC_057", "H7DC_040", "H7DC_032", "H7DC_049", "N/C", "N/C", "N/C"}}; /* Rack 4 */
 
 
 

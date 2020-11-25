@@ -598,7 +598,7 @@ void convert_data (char resp[], struct sensor *sensor_list, float *calib_temp, c
     for (i=0; i<strlen(resp); i++){
         resp_int[i] = hex_to_dec(resp[i]);
     }
-
+	
     for (i=0; i<16; i++){
 
         strcpy(tmp, "");
@@ -624,7 +624,8 @@ void convert_data (char resp[], struct sensor *sensor_list, float *calib_temp, c
         strcat(tmp, tmp7);
 
         /* collecting the signal of the data */
-        if (tmp[0] == "0")
+
+        if (tmp[0] == 48)
             strcpy(sig,"");
         else
             strcpy(sig,"-");
@@ -644,16 +645,16 @@ void convert_data (char resp[], struct sensor *sensor_list, float *calib_temp, c
         mant = strtod(data_V_char, NULL);        
 
         /* obtaining the value of the data in Volts */
-        data_V = (float) pow(mant*2, exp);
-
+        data_V = (float) (mant * pow(2, exp));
+		
         if (i % 2 == 0){ /* even index -> level data */
-            sens_ID = disp_sensors[rack-1];
 
             /* searchs for sensor's reference (ID) in the list */
             s = sensor_list;
-            for (j=0; j<sizeof(sensor_list);j++){
-                if (strcmp(s->ID, sens_ID) == 0)
+            for (j=0; j<30;j++){
+                if (strcmp(s->ID, disp_sensors[rack-1][(int) i/2]) == 0){
                     break;
+                }
                 s++;
             }
 
