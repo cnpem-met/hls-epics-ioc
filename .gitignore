@@ -15,11 +15,10 @@ HLSApp/src/O.Common
 HLSApp/src/O.linux-x86_64
 
 iocBoot/iocHLS/log/*
-iocBoot/iocHLS/data/*
+data/*
 
 iocBoot/iocHLS/procServ/*.log
 iocBoot/iocHLS/procServ/PIDinfo
 
 !iocBoot/iocHLS/log/.keep
-!iocBoot/iocHLS/data/.keep
-
+!data/.keep
