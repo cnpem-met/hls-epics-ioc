@@ -25,7 +25,7 @@ option +r;
 
 // Global variables
 char logFilePath[] = "log/iocHLS.log";
-char *dataFilePath[] = {"../../data/repo-hls-data/rack1.csv", "../../data/repo-hls-data/rack2.csv", "../../data/repo-hls-data/rack3.csv", "../../data/repo-hls-data/rack4.csv"};
+char *dataFilePath[] = {"/usr/data/repo-HLS/rack1.csv", "/usr/data/repo-HLS/rack2.csv", "/usr/data/repo-HLS/rack3.csv", "/usr/data/repo-HLS/rack4.csv"};
 FILE *log_file;
 FILE *data_file;
 
