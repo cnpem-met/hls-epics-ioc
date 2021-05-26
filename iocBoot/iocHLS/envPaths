@@ -1,5 +1,5 @@
 epicsEnvSet("IOC","iocHLS")
-epicsEnvSet("TOP","/home/HLS/Apps/HLS-EpicsApp")
+epicsEnvSet("TOP","/usr/apps/HLS-EpicsApp")
 epicsEnvSet("SNCSEQ","/usr/local/epics/synApps/support/seq-2-2-5")
 epicsEnvSet("ASYN","/usr/local/epics/synApps/support/asyn-R4-33")
 epicsEnvSet("STREAM","/usr/local/epics/synApps/support/stream-R2-7-7c")
