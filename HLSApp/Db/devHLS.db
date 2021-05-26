@@ -114,71 +114,263 @@ record (ai, state_rack2) { field (VAL, "0") }
 record (ai, state_rack3) { field (VAL, "0") }
 record (ai, state_rack4) { field (VAL, "0") }
 
-record (ai, HLS:C1_S1_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C1_S2_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C1_S3_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C1_S4_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C1_S5_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C1_S6_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C1_S7_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C1_S8_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C2_S1_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C2_S2_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C2_S3_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C2_S4_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C2_S5_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C2_S6_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C2_S7_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C2_S8_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C3_S1_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C3_S2_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C3_S3_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C3_S4_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C3_S5_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C3_S6_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C3_S7_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C3_S8_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C4_S1_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C4_S2_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C4_S3_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C4_S4_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C4_S5_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C4_S6_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C4_S7_LEVEL) { field (PREC, "3") }
-record (ai, HLS:C4_S8_LEVEL) { field (PREC, "3") }
+record (ai, HLS:C1_S1_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C1_S2_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C1_S3_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C1_S4_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C1_S5_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C1_S6_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C1_S7_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C1_S8_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C2_S1_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C2_S2_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C2_S3_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C2_S4_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C2_S5_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C2_S6_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C2_S7_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C2_S8_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C3_S1_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C3_S2_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C3_S3_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C3_S4_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C3_S5_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C3_S6_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C3_S7_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C3_S8_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C4_S1_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C4_S2_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C4_S3_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C4_S4_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C4_S5_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C4_S6_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C4_S7_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
+record (ai, HLS:C4_S8_LEVEL) {
+  field (PREC, "3")
+  field (EGU, "mm")
+}
 
-record (ai, HLS:C1_S1_TEMP) { field (PREC, "3") }
-record (ai, HLS:C1_S2_TEMP) { field (PREC, "3") }
-record (ai, HLS:C1_S3_TEMP) { field (PREC, "3") }
-record (ai, HLS:C1_S4_TEMP) { field (PREC, "3") }
-record (ai, HLS:C1_S5_TEMP) { field (PREC, "3") }
-record (ai, HLS:C1_S6_TEMP) { field (PREC, "3") }
-record (ai, HLS:C1_S7_TEMP) { field (PREC, "3") }
-record (ai, HLS:C1_S8_TEMP) { field (PREC, "3") }
-record (ai, HLS:C2_S1_TEMP) { field (PREC, "3") }
-record (ai, HLS:C2_S2_TEMP) { field (PREC, "3") }
-record (ai, HLS:C2_S3_TEMP) { field (PREC, "3") }
-record (ai, HLS:C2_S4_TEMP) { field (PREC, "3") }
-record (ai, HLS:C2_S5_TEMP) { field (PREC, "3") }
-record (ai, HLS:C2_S6_TEMP) { field (PREC, "3") }
-record (ai, HLS:C2_S7_TEMP) { field (PREC, "3") }
-record (ai, HLS:C2_S8_TEMP) { field (PREC, "3") }
-record (ai, HLS:C3_S1_TEMP) { field (PREC, "3") }
-record (ai, HLS:C3_S2_TEMP) { field (PREC, "3") }
-record (ai, HLS:C3_S3_TEMP) { field (PREC, "3") }
-record (ai, HLS:C3_S4_TEMP) { field (PREC, "3") }
-record (ai, HLS:C3_S5_TEMP) { field (PREC, "3") }
-record (ai, HLS:C3_S6_TEMP) { field (PREC, "3") }
-record (ai, HLS:C3_S7_TEMP) { field (PREC, "3") }
-record (ai, HLS:C3_S8_TEMP) { field (PREC, "3") }
-record (ai, HLS:C4_S1_TEMP) { field (PREC, "3") }
-record (ai, HLS:C4_S2_TEMP) { field (PREC, "3") }
-record (ai, HLS:C4_S3_TEMP) { field (PREC, "3") }
-record (ai, HLS:C4_S4_TEMP) { field (PREC, "3") }
-record (ai, HLS:C4_S5_TEMP) { field (PREC, "3") }
-record (ai, HLS:C4_S6_TEMP) { field (PREC, "3") }
-record (ai, HLS:C4_S7_TEMP) { field (PREC, "3") }
-record (ai, HLS:C4_S8_TEMP) { field (PREC, "3") }
+record (ai, HLS:C1_S1_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C1_S2_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C1_S3_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C1_S4_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C1_S5_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C1_S6_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C1_S7_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C1_S8_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C2_S1_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C2_S2_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C2_S3_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C2_S4_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C2_S5_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C2_S6_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C2_S7_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C2_S8_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C3_S1_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C3_S2_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C3_S3_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C3_S4_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C3_S5_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C3_S6_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C3_S7_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C3_S8_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C4_S1_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C4_S2_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C4_S3_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C4_S4_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C4_S5_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C4_S6_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C4_S7_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
+record (ai, HLS:C4_S8_TEMP) {
+  field (PREC, "3")
+  field (EGU, "C")
+}
 
 
 
