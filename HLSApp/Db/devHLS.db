@@ -114,262 +114,262 @@ record (ai, state_rack2) { field (VAL, "0") }
 record (ai, state_rack3) { field (VAL, "0") }
 record (ai, state_rack4) { field (VAL, "0") }
 
-record (ai, HLS:C1_S1_LEVEL) {
+record (ai, TU-17C:SS-HLS-Ax04NE5:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C1_S2_LEVEL) {
+record (ai, TU-16C:SS-HLS-Ax01NE4:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C1_S3_LEVEL) {
+record (ai, TU-15C:SS-HLS-Ax59NE3:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C1_S4_LEVEL) {
+record (ai, TU-14C:SS-HLS-Ax57NE2:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C1_S5_LEVEL) {
+record (ai, TU-13C:SS-HLS-Ax54NE1:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C1_S6_LEVEL) {
+record (ai, TU-XXC:SS-HLS-AxYYNE6:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C1_S7_LEVEL) {
+record (ai, TU-XXC:SS-HLS-AxYYNE7:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C1_S8_LEVEL) {
+record (ai, TU-XXC:SS-HLS-AxYYNE8:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C2_S1_LEVEL) {
+record (ai, TU-01C:SS-HLS-Ax18SE5:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C2_S2_LEVEL) {
+record (ai, TU-01C:SS-HLS-Ax16SE4:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C2_S3_LEVEL) {
+record (ai, TU-20C:SS-HLS-Ax14SE3:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C2_S4_LEVEL) {
+record (ai, TU-19C:SS-HLS-Ax12SE2:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C2_S5_LEVEL) {
+record (ai, TU-18C:SS-HLS-Ax09SE1:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C2_S6_LEVEL) {
+record (ai, TU-XXC:SS-HLS-AxYYSE6:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C2_S7_LEVEL) {
+record (ai, TU-XXC:SS-HLS-AxYYSE7:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C2_S8_LEVEL) {
+record (ai, TU-XXC:SS-HLS-AxYYSE8:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C3_S1_LEVEL) {
+record (ai, TU-06C:SS-HLS-Ax33SW5:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C3_S2_LEVEL) {
+record (ai, TU-06C:SS-HLS-Ax31SW4:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C3_S3_LEVEL) {
+record (ai, TU-05C:SS-HLS-Ax29SW3:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C3_S4_LEVEL) {
+record (ai, TU-04C:SS-HLS-Ax27SW2:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C3_S5_LEVEL) {
+record (ai, TU-03C:SS-HLS-Ax24SW1:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C3_S6_LEVEL) {
+record (ai, TU-XXC:SS-HLS-AxYYSW6:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C3_S7_LEVEL) {
+record (ai, TU-XXC:SS-HLS-AxYYSW7:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C3_S8_LEVEL) {
+record (ai, TU-XXC:SS-HLS-AxYYSW8:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C4_S1_LEVEL) {
+record (ai, TU-11C:SS-HLS-Ax48NW5:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C4_S2_LEVEL) {
+record (ai, TU-11C:SS-HLS-Ax46NW4:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C4_S3_LEVEL) {
+record (ai, TU-10C:SS-HLS-Ax44NW3:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C4_S4_LEVEL) {
+record (ai, TU-09C:SS-HLS-Ax42NW2:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C4_S5_LEVEL) {
+record (ai, TU-08C:SS-HLS-Ax39NW1:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C4_S6_LEVEL) {
+record (ai, TU-XXC:SS-HLS-AxYYNW6:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C4_S7_LEVEL) {
+record (ai, TU-XXC:SS-HLS-AxYYNW7:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
-record (ai, HLS:C4_S8_LEVEL) {
+record (ai, TU-XXC:SS-HLS-AxYYNW8:Level-Mon) {
   field (PREC, "3")
   field (EGU, "mm")
 }
 
-record (ai, HLS:C1_S1_TEMP) {
+record (ai, TU-17C:SS-HLS-Ax04NE5:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C1_S2_TEMP) {
+record (ai, TU-16C:SS-HLS-Ax01NE4:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C1_S3_TEMP) {
+record (ai, TU-15C:SS-HLS-Ax59NE3:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C1_S4_TEMP) {
+record (ai, TU-14C:SS-HLS-Ax57NE2:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C1_S5_TEMP) {
+record (ai, TU-13C:SS-HLS-Ax54NE1:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C1_S6_TEMP) {
+record (ai, TU-XXC:SS-HLS-AxYYNE6:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C1_S7_TEMP) {
+record (ai, TU-XXC:SS-HLS-AxYYNE7:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C1_S8_TEMP) {
+record (ai, TU-XXC:SS-HLS-AxYYNE8:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C2_S1_TEMP) {
+record (ai, TU-01C:SS-HLS-Ax18SE5:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C2_S2_TEMP) {
+record (ai, TU-01C:SS-HLS-Ax16SE4:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C2_S3_TEMP) {
+record (ai, TU-20C:SS-HLS-Ax14SE3:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C2_S4_TEMP) {
+record (ai, TU-19C:SS-HLS-Ax12SE2:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C2_S5_TEMP) {
+record (ai, TU-18C:SS-HLS-Ax09SE1:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C2_S6_TEMP) {
+record (ai, TU-XXC:SS-HLS-AxYYSE6:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C2_S7_TEMP) {
+record (ai, TU-XXC:SS-HLS-AxYYSE7:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C2_S8_TEMP) {
+record (ai, TU-XXC:SS-HLS-AxYYSE8:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C3_S1_TEMP) {
+record (ai, TU-06C:SS-HLS-Ax33SW5:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C3_S2_TEMP) {
+record (ai, TU-06C:SS-HLS-Ax31SW4:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C3_S3_TEMP) {
+record (ai, TU-05C:SS-HLS-Ax29SW3:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C3_S4_TEMP) {
+record (ai, TU-04C:SS-HLS-Ax27SW2:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C3_S5_TEMP) {
+record (ai, TU-03C:SS-HLS-Ax24SW1:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C3_S6_TEMP) {
+record (ai, TU-XXC:SS-HLS-AxYYSW6:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C3_S7_TEMP) {
+record (ai, TU-XXC:SS-HLS-AxYYSW7:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C3_S8_TEMP) {
+record (ai, TU-XXC:SS-HLS-AxYYSW8:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C4_S1_TEMP) {
+record (ai, TU-11C:SS-HLS-Ax48NW5:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C4_S2_TEMP) {
+record (ai, TU-11C:SS-HLS-Ax46NW4:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C4_S3_TEMP) {
+record (ai, TU-10C:SS-HLS-Ax44NW3:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C4_S4_TEMP) {
+record (ai, TU-09C:SS-HLS-Ax42NW2:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C4_S5_TEMP) {
+record (ai, TU-08C:SS-HLS-Ax39NW1:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C4_S6_TEMP) {
+record (ai, TU-XXC:SS-HLS-AxYYNW6:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C4_S7_TEMP) {
+record (ai, TU-XXC:SS-HLS-AxYYNW7:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
-record (ai, HLS:C4_S8_TEMP) {
+record (ai, TU-XXC:SS-HLS-AxYYNW8:Temp-Mon) {
   field (PREC, "3")
-  field (EGU, "C")
+  field (EGU, "mm")
 }
 
 

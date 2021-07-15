@@ -107,16 +107,24 @@ assign rack3_state to "state_rack3";
 assign rack4_state to "state_rack4";
 
 float HLS_level_data[32];
-assign HLS_level_data to {"HLS:C1_S1_LEVEL", "HLS:C1_S2_LEVEL", "HLS:C1_S3_LEVEL", "HLS:C1_S4_LEVEL", "HLS:C1_S5_LEVEL", "HLS:C1_S6_LEVEL", "HLS:C1_S7_LEVEL", "HLS:C1_S8_LEVEL",
-                          "HLS:C2_S1_LEVEL", "HLS:C2_S2_LEVEL", "HLS:C2_S3_LEVEL", "HLS:C2_S4_LEVEL", "HLS:C2_S5_LEVEL", "HLS:C2_S6_LEVEL", "HLS:C2_S7_LEVEL", "HLS:C2_S8_LEVEL",
-                          "HLS:C3_S1_LEVEL", "HLS:C3_S2_LEVEL", "HLS:C3_S3_LEVEL", "HLS:C3_S4_LEVEL", "HLS:C3_S5_LEVEL", "HLS:C3_S6_LEVEL", "HLS:C3_S7_LEVEL", "HLS:C3_S8_LEVEL", 
-                          "HLS:C4_S1_LEVEL", "HLS:C4_S2_LEVEL", "HLS:C4_S3_LEVEL", "HLS:C4_S4_LEVEL", "HLS:C4_S5_LEVEL", "HLS:C4_S6_LEVEL", "HLS:C4_S7_LEVEL", "HLS:C4_S8_LEVEL" };
+assign HLS_level_data to {"TU-17C:SS-HLS-Ax04NE5:Level-Mon", "TU-16C:SS-HLS-Ax01NE4:Level-Mon", "TU-15C:SS-HLS-Ax59NE3:Level-Mon", "TU-14C:SS-HLS-Ax57NE2:Level-Mon",
+                          "TU-13C:SS-HLS-Ax54NE1:Level-Mon", "TU-XXC:SS-HLS-AxYYNE6:Level-Mon", "TU-XXC:SS-HLS-AxYYNE7:Level-Mon", "TU-XXC:SS-HLS-AxYYNE8:Level-Mon",
+                          "TU-01C:SS-HLS-Ax18SE5:Level-Mon", "TU-01C:SS-HLS-Ax16SE4:Level-Mon", "TU-20C:SS-HLS-Ax14SE3:Level-Mon", "TU-19C:SS-HLS-Ax12SE2:Level-Mon",
+                          "TU-18C:SS-HLS-Ax09SE1:Level-Mon", "TU-XXC:SS-HLS-AxYYSE6:Level-Mon", "TU-XXC:SS-HLS-AxYYSE7:Level-Mon", "TU-XXC:SS-HLS-AxYYSE8:Level-Mon",
+                          "TU-06C:SS-HLS-Ax33SW5:Level-Mon", "TU-06C:SS-HLS-Ax31SW4:Level-Mon", "TU-05C:SS-HLS-Ax29SW3:Level-Mon", "TU-04C:SS-HLS-Ax27SW2:Level-Mon",
+                          "TU-03C:SS-HLS-Ax24SW1:Level-Mon", "TU-XXC:SS-HLS-AxYYSW6:Level-Mon", "TU-XXC:SS-HLS-AxYYSW7:Level-Mon", "TU-XXC:SS-HLS-AxYYSW8:Level-Mon",
+                          "TU-11C:SS-HLS-Ax48NW5:Level-Mon", "TU-11C:SS-HLS-Ax46NW4:Level-Mon", "TU-10C:SS-HLS-Ax44NW3:Level-Mon", "TU-09C:SS-HLS-Ax42NW2:Level-Mon",
+                          "TU-08C:SS-HLS-Ax39NW1:Level-Mon", "TU-XXC:SS-HLS-AxYYNW6:Level-Mon", "TU-XXC:SS-HLS-AxYYNW7:Level-Mon", "TU-XXC:SS-HLS-AxYYNW8:Level-Mon" };
 
 float HLS_temp_data[32];
-assign HLS_temp_data to {"HLS:C1_S1_TEMP", "HLS:C1_S2_TEMP", "HLS:C1_S3_TEMP", "HLS:C1_S4_TEMP", "HLS:C1_S5_TEMP", "HLS:C1_S6_TEMP", "HLS:C1_S7_TEMP", "HLS:C1_S8_TEMP",
-                         "HLS:C2_S1_TEMP", "HLS:C2_S2_TEMP", "HLS:C2_S3_TEMP", "HLS:C2_S4_TEMP", "HLS:C2_S5_TEMP", "HLS:C2_S6_TEMP", "HLS:C2_S7_TEMP", "HLS:C2_S8_TEMP",
-                         "HLS:C3_S1_TEMP", "HLS:C3_S2_TEMP", "HLS:C3_S3_TEMP", "HLS:C3_S4_TEMP", "HLS:C3_S5_TEMP", "HLS:C3_S6_TEMP", "HLS:C3_S7_TEMP", "HLS:C3_S8_TEMP", 
-                         "HLS:C4_S1_TEMP", "HLS:C4_S2_TEMP", "HLS:C4_S3_TEMP", "HLS:C4_S4_TEMP", "HLS:C4_S5_TEMP", "HLS:C4_S6_TEMP", "HLS:C4_S7_TEMP", "HLS:C4_S8_TEMP" };
+assign HLS_temp_data to {"TU-17C:SS-HLS-Ax04NE5:Temp-Mon", "TU-16C:SS-HLS-Ax01NE4:Temp-Mon", "TU-15C:SS-HLS-Ax59NE3:Temp-Mon", "TU-14C:SS-HLS-Ax57NE2:Temp-Mon",
+                          "TU-13C:SS-HLS-Ax54NE1:Temp-Mon", "TU-XXC:SS-HLS-AxYYNE6:Temp-Mon", "TU-XXC:SS-HLS-AxYYNE7:Temp-Mon", "TU-XXC:SS-HLS-AxYYNE8:Temp-Mon",
+                          "TU-01C:SS-HLS-Ax18SE5:Temp-Mon", "TU-01C:SS-HLS-Ax16SE4:Temp-Mon", "TU-20C:SS-HLS-Ax14SE3:Temp-Mon", "TU-19C:SS-HLS-Ax12SE2:Temp-Mon",
+                          "TU-18C:SS-HLS-Ax09SE1:Temp-Mon", "TU-XXC:SS-HLS-AxYYSE6:Temp-Mon", "TU-XXC:SS-HLS-AxYYSE7:Temp-Mon", "TU-XXC:SS-HLS-AxYYSE8:Temp-Mon",
+                          "TU-06C:SS-HLS-Ax33SW5:Temp-Mon", "TU-06C:SS-HLS-Ax31SW4:Temp-Mon", "TU-05C:SS-HLS-Ax29SW3:Temp-Mon", "TU-04C:SS-HLS-Ax27SW2:Temp-Mon",
+                          "TU-03C:SS-HLS-Ax24SW1:Temp-Mon", "TU-XXC:SS-HLS-AxYYSW6:Temp-Mon", "TU-XXC:SS-HLS-AxYYSW7:Temp-Mon", "TU-XXC:SS-HLS-AxYYSW8:Temp-Mon",
+                          "TU-11C:SS-HLS-Ax48NW5:Temp-Mon", "TU-11C:SS-HLS-Ax46NW4:Temp-Mon", "TU-10C:SS-HLS-Ax44NW3:Temp-Mon", "TU-09C:SS-HLS-Ax42NW2:Temp-Mon",
+                          "TU-08C:SS-HLS-Ax39NW1:Temp-Mon", "TU-XXC:SS-HLS-AxYYNW6:Temp-Mon", "TU-XXC:SS-HLS-AxYYNW7:Temp-Mon", "TU-XXC:SS-HLS-AxYYNW8:Temp-Mon" };
 
 
 /*------------------------------------------------------------------------------------------------
